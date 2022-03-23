@@ -1,4 +1,4 @@
-Shader "UniToon/URP/Lit"
+Shader "UniToon/URP_2021/Lit"
 {
     Properties
     {
@@ -8,7 +8,7 @@ Shader "UniToon/URP/Lit"
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
 
         _ShadeMap("Shade", 2D) = "white" {}
-        _ShadeColor("Shade Color", Color) = (1,1,1,1)
+        _ShadeColor("Shade Color", Color) = (0,0,0,1)
 
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
@@ -642,5 +642,5 @@ Shader "UniToon/URP/Lit"
     }
 
     FallBack "Hidden/Universal Render Pipeline/FallbackError"
-    CustomEditor "UniToon.ShaderGUIs.LitShaderGUI"
+    CustomEditor "UniToon.LitShader"
 }

@@ -4,38 +4,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace UniToon.ShaderGUIs
+namespace UniToon
 {
-    enum WorkflowMode
-	{
-		Specular,
-		Metallic,
-	}
-	
-	enum BlendMode
-	{
-		Opaque,
-		Cutout,
-		Fade,
-		Transparent,
-        FadeWithZWrite,
-		TransparentWithZWrite,
-	}
-
-	enum SmoothnessMapChannel
-	{
-		SpecularMetallicAlpha,
-		AlbedoAlpha
-	}
-
-    enum RenderFace
-    {
-        Front = 2,
-        Back = 1,
-        Both = 0
-    }
-
-    class LitShaderGUI : ShaderGUI
+    class LitShader : ShaderGUI
     {
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
@@ -45,7 +16,27 @@ namespace UniToon.ShaderGUIs
             var propToonyFactor = FindProperty("_ToonyFactor", properties);
 
             // version
-            GUILayout.Label("UniToon ver 0.1");
+            GUILayout.Label("UniToon ver 0.2.0");
+
+            EditorGUILayout.Space();
+            EditorGUI.BeginChangeCheck();
+            var ver = UniToonVersion.URP_2021;
+            if (mat.shader.name.Contains(UniToonVersion.URP_2021.ToString()))
+            {
+                ver = UniToonVersion.URP_2021;
+            }
+            ver = (UniToonVersion)EditorGUILayout.EnumPopup("Version", ver);
+            if (EditorGUI.EndChangeCheck())
+            {
+                var shader = Shader.Find($"UniToon/{ver.ToString()}/Lit");
+                if (shader == null)
+                {
+                    Debug.LogError($"UniToon/{ver.ToString()}/Lit shader not found.");
+                    return;
+                }
+                mat.shader = shader;
+                MaterialConverter.MaterialChanged(mat, ver);
+            }
 
             // workflow
             BeginSection("Workflow");
@@ -68,7 +59,7 @@ namespace UniToon.ShaderGUIs
                     FindProperty("_Cutoff", properties).floatValue = cutoff;
                     FindProperty("_ReceiveShadow", properties).floatValue = receiveShadow ? 1.0f : 0.0f;
 
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
             }
 
@@ -83,7 +74,7 @@ namespace UniToon.ShaderGUIs
                 
                 if (EndSection())
                 {
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
             }
 
@@ -96,7 +87,7 @@ namespace UniToon.ShaderGUIs
                 {
                     FindProperty("_ToonyFactor", properties).floatValue = factor;
 
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
             }
 
@@ -120,7 +111,7 @@ namespace UniToon.ShaderGUIs
                     FindProperty("_Smoothness", properties).floatValue = smoothness;
                     FindProperty("_SmoothnessTextureChannel", properties).floatValue = (float)channel;
 
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
             }
 
@@ -133,7 +124,7 @@ namespace UniToon.ShaderGUIs
                 
                 if (EndSection())
                 {
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
             }
 
@@ -146,7 +137,7 @@ namespace UniToon.ShaderGUIs
                 
                 if (EndSection())
                 {
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
             }
 
@@ -164,8 +155,10 @@ namespace UniToon.ShaderGUIs
                     FindProperty("_OutlineStrength", properties).floatValue = strength;
                     FindProperty("_OutlineSmoothness", properties).floatValue = smoothness;
 
-                    MaterialChanged(mat);
+                    MaterialConverter.MaterialChanged(mat, ver);
                 }
+
+                EditorGUILayout.HelpBox("Outline (Experimental) requires that the camera depth texture is enabled", MessageType.Info);
             }
 
             // advance
@@ -181,136 +174,8 @@ namespace UniToon.ShaderGUIs
                     FindProperty("_SpecularHighlights", properties).floatValue = specHighlight ? 1.0f : 0.0f;
                     FindProperty("_EnvironmentReflections", properties).floatValue = envRef ? 1.0f : 0.0f;
 
-                    MaterialChanged(mat, false);
+                    MaterialConverter.MaterialChanged(mat, ver, false);
                 }
-            }
-        }
-
-        private static void MaterialChanged(Material mat, bool updateRenderQueue = true)
-        {
-            // clear keywords
-            mat.shaderKeywords = new string[0];
-
-            // normal map
-            SetKeyword(mat, "_NORMALMAP", mat.GetTexture("_BumpMap") || mat.GetTexture("_DetailNormalMap"));
-
-            // workflow mode
-            if ((WorkflowMode)mat.GetFloat("_WorkflowMode") == WorkflowMode.Specular)
-            {
-                SetKeyword(mat, "_SPECGLOSSMAP", mat.GetTexture("_SpecGlossMap"));
-                SetKeyword(mat, "_SPECULAR_SETUP", true);
-            }
-            else
-            {
-                SetKeyword(mat, "_METALLICGLOSSMAP", mat.GetTexture("_MetallicGlossMap"));
-            }
-            
-            // parallax map
-            SetKeyword(mat, "_PARALLAXMAP", mat.GetTexture("_ParallaxMap"));
-
-            // occlusion map
-            SetKeyword(mat, "_OCCLUSIONMAP", mat.GetTexture("_OcclusionMap"));
-
-            // detail map
-            SetKeyword(mat, "_DETAIL_MULX2", mat.GetTexture("_DetailAlbedoMap") || mat.GetTexture("_DetailNormalMap"));
-
-            // emission
-            SetEmissionKeyword(mat);
-
-            // smoothness texture channel
-            SetKeyword(mat, "_SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A", (SmoothnessMapChannel)mat.GetFloat("_SmoothnessTextureChannel") == SmoothnessMapChannel.AlbedoAlpha);
-
-            // specular highlights
-            SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", mat.GetFloat("_SpecularHighlights") < 0.5f);
-
-            // receive shadow
-            SetKeyword(mat, "_RECEIVE_SHADOWS_OFF", mat.GetFloat("_ReceiveShadow") < 0.5f);
-
-            // blend mode
-            SetBlendMode(mat, updateRenderQueue);
-        }
-
-        private static void SetEmissionKeyword(Material mat)
-        {
-            var color = mat.GetColor("_EmissionColor");
-            var realtimeEmission = (mat.globalIlluminationFlags & MaterialGlobalIlluminationFlags.RealtimeEmissive) > 0;
-            SetKeyword(mat, "_EMISSION", color.maxColorComponent > 0.1f / 255.0f || realtimeEmission);
-        }
-
-        private static void SetBlendMode(Material mat, bool updateRenderQueue = true)
-        {
-            var blendMode = (BlendMode)mat.GetFloat("_Blend");
-
-            switch (blendMode)
-            {
-                case BlendMode.Opaque:
-                    mat.SetOverrideTag("RenderType", "");
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                    mat.SetInt("_ZWrite", 1);
-                    if (updateRenderQueue) mat.renderQueue = -1;
-                    break;
-
-                case BlendMode.Cutout:
-                    mat.SetOverrideTag("RenderType", "TransparentCutout");
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                    mat.SetInt("_ZWrite", 1);
-                    mat.EnableKeyword("_ALPHATEST_ON");
-                    if (updateRenderQueue) mat.renderQueue = (int)RenderQueue.AlphaTest;
-                    break;
-
-                case BlendMode.Fade:
-                    mat.SetOverrideTag("RenderType", "Transparent");
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    mat.SetInt("_ZWrite", 0);
-                    mat.EnableKeyword("_ALPHABLEND_ON");
-                    mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-                    if (updateRenderQueue) mat.renderQueue = (int)RenderQueue.Transparent;
-                    break;
-
-                case BlendMode.Transparent:
-                    mat.SetOverrideTag("RenderType", "Transparent");
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    mat.SetInt("_ZWrite", 0);
-                    mat.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                    mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-                    if (updateRenderQueue) mat.renderQueue = (int)RenderQueue.Transparent;
-                    break;
-
-                case BlendMode.FadeWithZWrite:
-                    mat.SetOverrideTag("RenderType", "Transparent");
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    mat.SetInt("_ZWrite", 1);
-                    mat.EnableKeyword("_ALPHABLEND_ON");
-                    mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-                    if (updateRenderQueue) mat.renderQueue = (int)RenderQueue.Transparent;
-                    break;
-
-                case BlendMode.TransparentWithZWrite:
-                    mat.SetOverrideTag("RenderType", "Transparent");
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    mat.SetInt("_ZWrite", 1);
-                    mat.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                    mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-                    if (updateRenderQueue) mat.renderQueue = (int)RenderQueue.Transparent;
-                    break;
-            }
-        }
-
-        private static void SetKeyword(Material mat, string keyword, bool flag)
-        {
-            if (flag)
-            {
-                mat.EnableKeyword(keyword);
-            }
-            else
-            {
-                mat.DisableKeyword(keyword);
             }
         }
 
