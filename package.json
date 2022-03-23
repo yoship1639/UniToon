@@ -1,0 +1,17 @@
+{
+    "name": "com.yoship1639.unitoon",
+    "version": "0.1",
+    "displayName": "UniToon",
+    "description": "A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future",
+    "unity": "2019.4",
+    "unityRelease": "0b5",
+    "keywords": [
+      "shader",
+      "toon"
+    ],
+    "author": {
+      "name": "yoship1639",
+      "email": "yoship1639@gmail.com",
+      "url": "https://github.com/yoship1639/UniToon"
+    }
+  }
