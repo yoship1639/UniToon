@@ -16,6 +16,9 @@ CBUFFER_START(UnityPerMaterial)
 half _ToonyFactor;
 float4 _ShadeMap_ST;
 half4 _ShadeColor;
+half _ShadeHue;
+half _ShadeSaturation;
+half _ShadeBrightness;
 float4 _BaseMap_ST;
 float4 _DetailAlbedoMap_ST;
 half4 _BaseColor;
@@ -44,8 +47,11 @@ CBUFFER_END
 // NOTE: Dots instancing is orthogonal to the constant buffer above.
 #ifdef UNITY_DOTS_INSTANCING_ENABLED
 UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
-    UNITY_DOTS_INSTANCED_PROP(float, _ToonyFactor)
+    UNITY_DOTS_INSTANCED_PROP(float,  _ToonyFactor)
     UNITY_DOTS_INSTANCED_PROP(float4, _ShadeColor)
+    UNITY_DOTS_INSTANCED_PROP(float,  _ShadeHue)
+    UNITY_DOTS_INSTANCED_PROP(float,  _ShadeSaturation)
+    UNITY_DOTS_INSTANCED_PROP(float,  _ShadeBrightness)
     UNITY_DOTS_INSTANCED_PROP(float4, _BaseColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _SpecColor)
     UNITY_DOTS_INSTANCED_PROP(float4, _EmissionColor)
@@ -68,6 +74,9 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
 #define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ToonyFactor)
 #define _ShadeColor             UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeColor)
+#define _ShadeHue               UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeHue)
+#define _ShadeSaturation        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeSaturation)
+#define _ShadeBrightness        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeBrightness)
 #define _BaseColor              UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_BaseColor)
 #define _SpecColor              UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_SpecColor)
 #define _EmissionColor          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_EmissionColor)

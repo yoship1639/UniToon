@@ -1,14 +1,17 @@
-Shader "UniToon/URP_2021/Lit"
+Shader "UniToon/URP_2021_2/Lit"
 {
     Properties
     {
-        _ToonyFactor("Toony Factor", Range(0.001, 1.0)) = 0.3
+        _ToonyFactor("Toony Factor", Range(0.001, 1.0)) = 0.1
 
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
 
         _ShadeMap("Shade", 2D) = "white" {}
-        _ShadeColor("Shade Color", Color) = (0,0,0,1)
+        _ShadeColor("Shade Color", Color) = (0.75,0.75,0.75,1)
+        _ShadeHue("Shade Hue", Range(0.0, 1.0)) = 0
+        _ShadeSaturation("Shade Saturation", Range(0.0, 4.0)) = 2
+        _ShadeBrightness("Shade Brightness", Range(0.0, 1.0)) = 0.5
 
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
@@ -141,8 +144,8 @@ Shader "UniToon/URP_2021/Lit"
             #pragma vertex LitPassVertex
             #pragma fragment LitPassFragment
 
-            #include "./LitURPInput.hlsl"
-            #include "./LitURPForwardPass.hlsl"
+            #include "./LitInput.hlsl"
+            #include "./LitForwardPass.hlsl"
             ENDHLSL
         }
 
@@ -182,7 +185,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
             ENDHLSL
         }
@@ -251,7 +254,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma vertex LitGBufferPassVertex
             #pragma fragment LitGBufferPassFragment
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitGBufferPass.hlsl"
             ENDHLSL
         }
@@ -285,7 +288,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma multi_compile_instancing
             #pragma multi_compile _ DOTS_INSTANCING_ON
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
@@ -322,8 +325,8 @@ Shader "UniToon/URP_2021/Lit"
             #pragma multi_compile_instancing
             #pragma multi_compile _ DOTS_INSTANCING_ON
 
-            #include "./LitURPInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
+            #include "./LitInput.hlsl"
+            #include "./LitDepthNormalsPass.hlsl"
             ENDHLSL
         }
 
@@ -355,7 +358,7 @@ Shader "UniToon/URP_2021/Lit"
 
             #pragma shader_feature_local_fragment _SPECGLOSSMAP
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitMetaPass.hlsl"
 
             ENDHLSL
@@ -383,7 +386,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _ALPHABLEND_ON
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
             ENDHLSL
         }
@@ -466,8 +469,8 @@ Shader "UniToon/URP_2021/Lit"
             #pragma vertex LitPassVertex
             #pragma fragment LitPassFragment
 
-            #include "./LitURPInput.hlsl"
-            #include "./LitURPForwardPass.hlsl"
+            #include "./LitInput.hlsl"
+            #include "./LitForwardPass.hlsl"
             ENDHLSL
         }
 
@@ -506,7 +509,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
             ENDHLSL
         }
@@ -539,7 +542,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
@@ -575,8 +578,8 @@ Shader "UniToon/URP_2021/Lit"
             // GPU Instancing
             #pragma multi_compile_instancing
 
-            #include "./LitURPInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
+            #include "./LitInput.hlsl"
+            #include "./LitDepthNormalsPass.hlsl"
             ENDHLSL
         }
 
@@ -608,7 +611,7 @@ Shader "UniToon/URP_2021/Lit"
 
             #pragma shader_feature_local_fragment _SPECGLOSSMAP
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitMetaPass.hlsl"
 
             ENDHLSL
@@ -635,7 +638,7 @@ Shader "UniToon/URP_2021/Lit"
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _ALPHABLEND_ON
 
-            #include "./LitURPInput.hlsl"
+            #include "./LitInput.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/Shaders/Utils/Universal2D.hlsl"
             ENDHLSL
         }

@@ -1,7 +1,7 @@
 #ifndef UNITOON_FORWARD_LIT_PASS_INCLUDED
 #define UNITOON_FORWARD_LIT_PASS_INCLUDED
 
-#include "./URPLighting.hlsl"
+#include "./Lighting.hlsl"
 #include "./UniToonFunctions.hlsl"
 
 // GLES2 has limited amount of interpolators
@@ -219,7 +219,8 @@ half4 LitPassFragment(Varyings input) : SV_Target
     ApplyDecalToSurfaceData(input.positionCS, surfaceData, inputData);
 #endif
 
-    half3 shadeColor = SAMPLE_TEXTURE2D(_ShadeMap, sampler_ShadeMap, input.uv).rgb * _ShadeColor.rgb;
+    half3 shadeColor = SAMPLE_TEXTURE2D(_ShadeMap, sampler_ShadeMap, input.uv).rgb;
+    shadeColor = shift(shadeColor, half3(_ShadeHue, _ShadeSaturation, _ShadeBrightness)) * _ShadeColor.rgb;
     half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor);
 
     // Outline

@@ -20,10 +20,10 @@ namespace UniToon
 
             EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
-            var ver = UniToonVersion.URP_2021;
-            if (mat.shader.name.Contains(UniToonVersion.URP_2021.ToString()))
+            var ver = UniToonVersion.URP_2021_2;
+            if (mat.shader.name.Contains(UniToonVersion.URP_2021_2.ToString()))
             {
-                ver = UniToonVersion.URP_2021;
+                ver = UniToonVersion.URP_2021_2;
             }
             ver = (UniToonVersion)EditorGUILayout.EnumPopup("Version", ver);
             if (EditorGUI.EndChangeCheck())
@@ -68,12 +68,19 @@ namespace UniToon
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Base"), FindProperty("_BaseMap", properties), FindProperty("_BaseColor", properties));
                 materialEditor.TexturePropertySingleLine(new GUIContent("Shade"), FindProperty("_ShadeMap", properties), FindProperty("_ShadeColor", properties));
+                var h = EditorGUILayout.Slider("Shade Hue", mat.GetFloat("_ShadeHue"), 0.0f, 1.0f);
+                var s = EditorGUILayout.Slider("Shade Saturation", mat.GetFloat("_ShadeSaturation"), 0.0f, 4.0f);
+                var v = EditorGUILayout.Slider("Shade Brightness", mat.GetFloat("_ShadeBrightness"), 0.0f, 1.0f);
                 materialEditor.TexturePropertySingleLine(new GUIContent("Emission"), FindProperty("_EmissionMap", properties), FindProperty("_EmissionColor", properties));
 
                 materialEditor.TextureScaleOffsetProperty(FindProperty("_BaseMap", properties));
                 
                 if (EndSection())
                 {
+                    FindProperty("_ShadeHue", properties).floatValue = h;
+                    FindProperty("_ShadeSaturation", properties).floatValue = s;
+                    FindProperty("_ShadeBrightness", properties).floatValue = v;
+
                     MaterialConverter.MaterialChanged(mat, ver);
                 }
             }

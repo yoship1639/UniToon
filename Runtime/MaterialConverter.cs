@@ -7,7 +7,8 @@ namespace UniToon
 {
     public enum UniToonVersion
     {
-        URP_2021,
+        Unknown,
+        URP_2021_2,
     }
 
     public enum WorkflowMode
@@ -41,6 +42,15 @@ namespace UniToon
 
     public class MaterialConverter
     {
+        public static UniToonVersion GetCurrentVersion()
+        {
+#if UNITY_2021_2
+            return UniToonVersion.URP_2021_2;
+#else
+            return UniToonVersion.Unknown;
+#endif
+        }
+
         public static void MaterialChanged(Material mat, UniToonVersion version, bool updateRenderQueue = true)
         {
             // clear keywords
