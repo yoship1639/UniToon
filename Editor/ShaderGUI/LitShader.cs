@@ -16,7 +16,7 @@ namespace UniToon
             var propToonyFactor = FindProperty("_ToonyFactor", properties);
 
             // version
-            GUILayout.Label("UniToon ver 0.2.0");
+            GUILayout.Label("UniToon ver 0.3.0");
 
             EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
