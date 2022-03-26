@@ -6,6 +6,12 @@ A universally usable toon shader. compliant with Unity standard rendering functi
 
 ![img001.png](./Documents/img/img001.png)
 
+## Features
+* Both Toon and PBR expressions
+* Blends in with the environment
+* No custom shader keywords
+* No goal of multifunctionality
+
 ## Compatible
 
 UniToon supports any light environment implemented by Unity.
