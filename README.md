@@ -4,7 +4,7 @@ ver 0.3.0
 
 A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future.
 
-![img001.png](./DOcuments/img/img001.png)
+![img001.png](./Documents/img/img001.png)
 
 ## Compatible
 
@@ -50,20 +50,20 @@ Unity Version
 
 Light intensity
 
-![img002.png](./DOcuments/img/img002.png)
+![img002.png](./Documents/img/img002.png)
 
 Light indirect multipiler
 
-![img003.png](./DOcuments/img/img003.png)
+![img003.png](./Documents/img/img003.png)
 
 Sky light intensity
 
-![img004.png](./DOcuments/img/img004.png)
+![img004.png](./Documents/img/img004.png)
 
 Red point light
 
-![img005.png](./DOcuments/img/img005.png)
+![img005.png](./Documents/img/img005.png)
 
 Red, Green and Blue lights
 
-![img006.png](./DOcuments/img/img006.png)
+![img006.png](./Documents/img/img006.png)
