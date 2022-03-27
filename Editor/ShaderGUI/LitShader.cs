@@ -16,7 +16,7 @@ namespace UniToon
             var propToonyFactor = FindProperty("_ToonyFactor", properties);
 
             // version
-            GUILayout.Label("UniToon ver 0.4.0");
+            GUILayout.Label("UniToon ver 0.5.0");
 
             EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
@@ -171,6 +171,19 @@ namespace UniToon
                 }
 
                 EditorGUILayout.HelpBox("Outline (Experimental) requires that the camera depth texture is enabled", MessageType.Info);
+            }
+
+            // post process
+            BeginSection("Post Process");
+            {
+                var bri = EditorGUILayout.Slider("Post Brightness", mat.GetFloat("_PostBrightness"), 0.0f, 2.0f);
+                
+                if (EndSection())
+                {
+                    FindProperty("_PostBrightness", properties).floatValue = bri;
+
+                    MaterialConverter.MaterialChanged(mat, ver);
+                }
             }
 
             // advance

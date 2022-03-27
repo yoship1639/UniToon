@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.5.0] - 2022-03-27
+### Changes
+- Add post process property.
+
 ## [0.4.0] - 2022-03-27
 ### Changes
 - Fix outline logic.

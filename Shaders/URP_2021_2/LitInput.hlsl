@@ -41,6 +41,7 @@ half _OutlineWidth;
 half _OutlineLightAffects;
 half _OutlineStrength;
 half _OutlineSmoothness;
+half _PostBrightness;
 CBUFFER_END
 
 // NOTE: Do not ifdef the properties for dots instancing, but ifdef the actual usage.
@@ -73,6 +74,7 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineLightAffects)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineStrength)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineSmoothness)
+    UNITY_DOTS_INSTANCED_PROP(float , _PostBrightness)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
 #define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ToonyFactor)
@@ -100,6 +102,7 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 #define _OutlineLightAffects    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineLightAffects)
 #define _OutlineStrength        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineStrength)
 #define _OutlineSmoothness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineSmoothness)
+#define _PostBrightness         UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostBrightness)
 #endif
 
 TEXTURE2D(_ShadeMap);           SAMPLER(sampler_ShadeMap);
