@@ -16,7 +16,7 @@ namespace UniToon
             var propToonyFactor = FindProperty("_ToonyFactor", properties);
 
             // version
-            GUILayout.Label("UniToon ver 0.3.0");
+            GUILayout.Label("UniToon ver 0.4.0");
 
             EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
@@ -135,7 +135,7 @@ namespace UniToon
                 }
             }
 
-            // surface
+            // detail
             BeginSection("Detail");
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Detail Mask"), FindProperty("_DetailMask", properties));
@@ -151,13 +151,18 @@ namespace UniToon
             // outline (experimental)
             BeginSection("Outline (Experimental)");
             {
-                materialEditor.TexturePropertySingleLine(new GUIContent("Outline Color"), FindProperty("_OutlineMap", properties), FindProperty("_OutlineColor", properties));
+                var sat = EditorGUILayout.Slider("Outline Saturation", mat.GetFloat("_OutlineSaturation"), 0.0f, 4.0f);
+                var bri = EditorGUILayout.Slider("Outline Brightness", mat.GetFloat("_OutlineBrightness"), 0.0f, 1.0f);
+                var affects = EditorGUILayout.Slider("Outline Light Affects", mat.GetFloat("_OutlineLightAffects"), 0.0f, 1.0f);
                 var width = EditorGUILayout.Slider("Outline Width", mat.GetFloat("_OutlineWidth"), 0.0f, 20.0f);
                 var strength = EditorGUILayout.Slider("Outline Strength", mat.GetFloat("_OutlineStrength"), 0.0f, 1.0f);
                 var smoothness = EditorGUILayout.Slider("Outline Smoothness", mat.GetFloat("_OutlineSmoothness"), 0.0f, 1.0f);
                 
                 if (EndSection())
                 {
+                    FindProperty("_OutlineSaturation", properties).floatValue = sat;
+                    FindProperty("_OutlineBrightness", properties).floatValue = bri;
+                    FindProperty("_OutlineLightAffects", properties).floatValue = affects;
                     FindProperty("_OutlineWidth", properties).floatValue = width;
                     FindProperty("_OutlineStrength", properties).floatValue = strength;
                     FindProperty("_OutlineSmoothness", properties).floatValue = smoothness;
@@ -175,6 +180,7 @@ namespace UniToon
 
                 var specHighlight = EditorGUILayout.Toggle("Specular Highlights", mat.GetFloat("_SpecularHighlights") > 0.5f);
                 var envRef = EditorGUILayout.Toggle("Environment Reflections", mat.GetFloat("_EnvironmentReflections") > 0.5f);
+                materialEditor.EnableInstancingField();
                 
                 if (EndSection())
                 {

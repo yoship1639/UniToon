@@ -45,11 +45,14 @@ Shader "UniToon/URP_2021_2/Lit"
         _DetailNormalMapScale("Scale", Range(0.0, 2.0)) = 1.0
         [Normal] _DetailNormalMap("Normal Map", 2D) = "bump" {}
 
-        _OutlineMap("Outline Map", 2D) = "white" {}
-        _OutlineColor("Outline Color", Color) = (0.0, 0.0, 0.0)
+        //_OutlineMap("Outline Map", 2D) = "white" {}
+        //_OutlineColor("Outline Color", Color) = (0.0, 0.0, 0.0)
         _OutlineWidth("Outline Width", Range(0.0, 20.0)) = 0.0
-        _OutlineStrength("Outline Strength", Range(0.0, 1.0)) = 0.5
-        _OutlineSmoothness("Outline Smoothness", Range(0.0, 1.0)) = 0.3
+        _OutlineLightAffects("Outline Light Affects", Range(0.0, 1.0)) = 1.0
+        _OutlineSaturation("Outline Saturation", Range(0.0, 4.0)) = 3.0
+        _OutlineBrightness("Outline Brightness", Range(0.0, 1.0)) = 0.25
+        _OutlineStrength("Outline Strength", Range(0.0, 1.0)) = 0.85
+        _OutlineSmoothness("Outline Smoothness", Range(0.0, 1.0)) = 0.75
 
         [HideInInspector] _ReceiveShadow("Receive Shadow", Float) = 1.0
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0

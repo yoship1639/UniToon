@@ -35,9 +35,10 @@ half _ClearCoatSmoothness;
 half _DetailAlbedoMapScale;
 half _DetailNormalMapScale;
 half _Surface;
-float4 _OutlineMap_ST;
-half4 _OutlineColor;
+half _OutlineSaturation;
+half _OutlineBrightness;
 half _OutlineWidth;
+half _OutlineLightAffects;
 half _OutlineStrength;
 half _OutlineSmoothness;
 CBUFFER_END
@@ -66,8 +67,10 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _DetailAlbedoMapScale)
     UNITY_DOTS_INSTANCED_PROP(float , _DetailNormalMapScale)
     UNITY_DOTS_INSTANCED_PROP(float , _Surface)
-    UNITY_DOTS_INSTANCED_PROP(float4, _OutlineColor)
+    UNITY_DOTS_INSTANCED_PROP(float , _OutlineSaturation)
+    UNITY_DOTS_INSTANCED_PROP(float , _OutlineBrightness)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineWidth)
+    UNITY_DOTS_INSTANCED_PROP(float , _OutlineLightAffects)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineStrength)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineSmoothness)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
@@ -91,8 +94,10 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 #define _DetailAlbedoMapScale   UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_DetailAlbedoMapScale)
 #define _DetailNormalMapScale   UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_DetailNormalMapScale)
 #define _Surface                UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_Surface)
-#define _OutlineWidth           UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_OutlineColor)
+#define _OutlineSaturation      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineSaturation)
+#define _OutlineBrightness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineBrightness)
 #define _OutlineWidth           UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineWidth)
+#define _OutlineLightAffects    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineLightAffects)
 #define _OutlineStrength        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineStrength)
 #define _OutlineSmoothness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineSmoothness)
 #endif

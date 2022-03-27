@@ -1,6 +1,6 @@
 # UniToon
 
-ver 0.3.0
+ver 0.4.0
 
 A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future.
 
@@ -73,3 +73,7 @@ Red point light
 Red, Green and Blue lights
 
 ![img006.png](./Documents/img/img006.png)
+
+Outline
+
+![img007.png](./Documents/img/img007.png)

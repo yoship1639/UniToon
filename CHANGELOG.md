@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.4.0] - 2022-03-27
+### Changes
+- Fix outline logic.
+
 ## [0.3.0] - 2022-03-25
 ### Changes
 - Add MMD shader to UniToon shader converter.

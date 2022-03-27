@@ -55,7 +55,7 @@ half3 UniToonCalculateBlinnPhong(Light light, InputData inputData, SurfaceData s
 }
 
 
-half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 shadeColor, half toonyFactor)
+half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 shadeColor, half toonyFactor, out half totalRamp)
 {
     #if defined(_SPECULARHIGHLIGHTS_OFF)
     bool specularHighlightsOff = true;
@@ -93,7 +93,7 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
                                               inputData.normalWS, inputData.viewDirectionWS);
 
     half3 totalColor = 0;
-    half totalRamp = 0;
+    totalRamp = 0;
     half3 totalSpec = 0;
 
     half3 color = 0;
@@ -139,7 +139,8 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     LIGHT_LOOP_END
     #endif
 
-    lightingData.mainLightColor = lerp(shadeColor, max(shadeColor, totalColor), saturate(totalRamp)) + totalSpec;
+    totalRamp = saturate(totalRamp);
+    lightingData.mainLightColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) + totalSpec;
     lightingData.additionalLightsColor = 0;
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)

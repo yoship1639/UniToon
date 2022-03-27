@@ -221,18 +221,17 @@ half4 LitPassFragment(Varyings input) : SV_Target
 
     half3 shadeColor = SAMPLE_TEXTURE2D(_ShadeMap, sampler_ShadeMap, input.uv).rgb;
     shadeColor = shift(shadeColor, half3(_ShadeHue, _ShadeSaturation, _ShadeBrightness)) * _ShadeColor.rgb;
-    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor);
+    half ramp;
+    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, ramp);
 
     // Outline
 #if !(defined(_ALPHAPREMULTIPLY_ON) || defined(_ALPHABLEND_ON))
     if (_OutlineWidth > 0.0 && _OutlineStrength > 0.0)
     {
         float2 screenPos = ComputeScreenPos(input.screenPos / input.screenPos.w).xy;
-        half outlineStrength = remap(_OutlineStrength, 0.0, 1.0, 0.0, 0.9);
-        half outlineSmoothness = remap(_OutlineSmoothness, 0.0, 1.0, 0.1, 0.5);
-        half outlineFactor = SoftOutline(screenPos, _OutlineWidth, (1.0 / (1.0 - outlineStrength)) - 1.0, 1.0 / outlineSmoothness);
-        half3 outlineColor = SAMPLE_TEXTURE2D(_OutlineMap, sampler_OutlineMap, input.uv).rgb * _OutlineColor.rgb;
-        color.rgb = lerp(color.rgb, outlineColor, outlineFactor);
+        half outlineFactor = SoftOutline(screenPos, lerp(_OutlineWidth, _OutlineWidth * 0.5, ramp * _OutlineLightAffects), _OutlineStrength, _OutlineSmoothness);
+        //half3 outlineColor = SAMPLE_TEXTURE2D(_OutlineMap, sampler_OutlineMap, input.uv).rgb * _OutlineColor.rgb;
+        color.rgb = lerp(color.rgb, shift(color.rgb, half3(0.0, _OutlineSaturation, lerp(_OutlineBrightness, saturate(_OutlineBrightness * 2.0), ramp * _OutlineLightAffects))), outlineFactor);
     }
 #endif
 
