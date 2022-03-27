@@ -222,7 +222,7 @@ half4 LitPassFragment(Varyings input) : SV_Target
     half3 shadeColor = SAMPLE_TEXTURE2D(_ShadeMap, sampler_ShadeMap, input.uv).rgb;
     shadeColor = shift(shadeColor, half3(_ShadeHue, _ShadeSaturation, _ShadeBrightness)) * _ShadeColor.rgb;
     half ramp;
-    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, ramp);
+    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, _NormalCorrect, ramp);
 
     // Outline
 #if !(defined(_ALPHAPREMULTIPLY_ON) || defined(_ALPHABLEND_ON))

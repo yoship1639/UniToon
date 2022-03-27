@@ -16,7 +16,7 @@ namespace UniToon
             var propToonyFactor = FindProperty("_ToonyFactor", properties);
 
             // version
-            GUILayout.Label("UniToon ver 0.5.0");
+            GUILayout.Label("UniToon ver 0.6.0");
 
             EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
@@ -89,10 +89,12 @@ namespace UniToon
             BeginSection("Shading");
             {
                 var factor = EditorGUILayout.Slider("Toony Factor", mat.GetFloat("_ToonyFactor"), 0.001f, 1.0f);
+                var normalCorrect = EditorGUILayout.Slider("Normal Correct", mat.GetFloat("_NormalCorrect"), 0.0f, 1.0f);
                 
                 if (EndSection())
                 {
                     FindProperty("_ToonyFactor", properties).floatValue = factor;
+                    FindProperty("_NormalCorrect", properties).floatValue = normalCorrect;
 
                     MaterialConverter.MaterialChanged(mat, ver);
                 }

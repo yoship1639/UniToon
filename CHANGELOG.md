@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.6.0] - 2022-03-27
+### Changes
+- Add normal correct property.
+
 ## [0.5.0] - 2022-03-27
 ### Changes
 - Add post process property.

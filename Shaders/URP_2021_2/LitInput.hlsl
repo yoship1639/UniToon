@@ -14,6 +14,7 @@
 // NOTE: Do not ifdef the properties here as SRP batcher can not handle different layouts.
 CBUFFER_START(UnityPerMaterial)
 half _ToonyFactor;
+half _NormalCorrect;
 float4 _ShadeMap_ST;
 half4 _ShadeColor;
 half _ShadeHue;
@@ -50,6 +51,7 @@ CBUFFER_END
 #ifdef UNITY_DOTS_INSTANCING_ENABLED
 UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float,  _ToonyFactor)
+    UNITY_DOTS_INSTANCED_PROP(float,  _NormalCorrect)
     UNITY_DOTS_INSTANCED_PROP(float4, _ShadeColor)
     UNITY_DOTS_INSTANCED_PROP(float,  _ShadeHue)
     UNITY_DOTS_INSTANCED_PROP(float,  _ShadeSaturation)
@@ -78,6 +80,7 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
 #define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ToonyFactor)
+#define _NormalCorrect          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_NormalCorrect)
 #define _ShadeColor             UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeColor)
 #define _ShadeHue               UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeHue)
 #define _ShadeSaturation        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeSaturation)

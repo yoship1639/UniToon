@@ -3,6 +3,7 @@ Shader "UniToon/URP_2021_2/Lit"
     Properties
     {
         _ToonyFactor("Toony Factor", Range(0.001, 1.0)) = 0.1
+        _NormalCorrect("Normal Correct", Range(0.0, 1.0)) = 0.0
 
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
