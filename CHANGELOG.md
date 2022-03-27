@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.7.0] - 2022-03-28
+### Changes
+- Fix lighting logic.
+- Fix material gui.
+
 ## [0.6.0] - 2022-03-27
 ### Changes
 - Add normal correct property.

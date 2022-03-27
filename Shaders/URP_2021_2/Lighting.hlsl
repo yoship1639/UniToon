@@ -3,11 +3,16 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
+#define INV_PI 0.318309
+#define UNITOON_BRIGHTNESS 0.55
+
 void UniToonLightingPhysicallyBased(BRDFData brdfData,
     half3 lightColor, half3 lightDirectionWS, half distanceAttenuation, half shadowAttenuation,
     half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff,
     half3 shadeColor, half toonyFactor, half normalCorrect, out half3 color, out half ramp, out half3 spec)
 {
+    //const float BRIGHTNESS = (INV_PI + 1.0) * 0.5;
+    
     half NdotL = saturate(dot(lerp(normalWS, viewDirectionWS, normalCorrect), lightDirectionWS));
     half lightAttenuation = distanceAttenuation * shadowAttenuation;
     ramp = 1.0 - NdotL;
@@ -141,6 +146,7 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
     totalRamp = saturate(totalRamp);
     lightingData.mainLightColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) + totalSpec;
+    lightingData.mainLightColor *= UNITOON_BRIGHTNESS;
     lightingData.additionalLightsColor = 0;
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)

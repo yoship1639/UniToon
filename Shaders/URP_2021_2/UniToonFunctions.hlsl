@@ -51,17 +51,14 @@ float SoftOutline(float2 uv, half width, half strength, half power)
     float coeff[8] = {0.5, 1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 0.5};
 
     float depthValue = 0;
-    float str = pow(10.0, strength * 10.0);
+    float str = pow(20.0, strength * 10.0);
     float smoothness = 1.0 / remap(power, 0.0, 1.0, 0.01, 0.3);
     [unroll]
     for (int j = 0; j < 8; j++)
     {
-        float sub = abs(depthes[j] - sceneDepth);
-        //sub = saturate(sub * 100);
+        float sub = max(depthes[j] - sceneDepth, 0.0);
         sub = pow(sub, smoothness);
-        //sub *= 0.01;
         sub *= str * coeff[j];
-        //sub = pow(sub, power) * str * coeff[j];
         depthValue += sub;
     }
 
