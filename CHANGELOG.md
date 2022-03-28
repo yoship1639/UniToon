@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.7.1] - 2022-03-28
+### Changes
+- Fix material gui.
+
 ## [0.7.0] - 2022-03-28
 ### Changes
 - Fix lighting logic.

@@ -48,7 +48,7 @@ float SoftOutline(float2 uv, half width, half strength, half power)
     depthes[6] = sampleSceneDepth(uv + float2(delta.x,   0.0)    );
     depthes[7] = sampleSceneDepth(uv + float2(delta.x,   delta.y));
 
-    float coeff[8] = {0.5, 1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 0.5};
+    float coeff[8] = {0.7071, 1.0, 0.7071, 1.0, 1.0, 0.7071, 1.0, 0.7071};
 
     float depthValue = 0;
     float str = pow(20.0, strength * 10.0);

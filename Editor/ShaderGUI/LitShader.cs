@@ -15,7 +15,7 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.7.0");
+            GUILayout.Label("UniToon ver 0.7.1");
 
             EditorGUILayout.Space();
             EditorGUI.BeginChangeCheck();
@@ -59,7 +59,7 @@ namespace UniToon
                 materialEditor.TexturePropertySingleLine(new GUIContent("Base"), FindProperty("_BaseMap", properties), FindProperty("_BaseColor", properties));
                 materialEditor.TexturePropertySingleLine(new GUIContent("Shade"), FindProperty("_ShadeMap", properties), FindProperty("_ShadeColor", properties));
                 changed |= MaterialGUI.Slider("Shade Hue", FindProperty("_ShadeHue", properties), 0.0f, 1.0f);
-                changed |= MaterialGUI.Slider("Shade Saturation", FindProperty("_ShadeSaturation", properties), 0.0f, 1.0f);
+                changed |= MaterialGUI.Slider("Shade Saturation", FindProperty("_ShadeSaturation", properties), 0.0f, 4.0f);
                 changed |= MaterialGUI.Slider("Shade Brightness", FindProperty("_ShadeBrightness", properties), 0.0f, 1.0f);
                 materialEditor.TexturePropertySingleLine(new GUIContent("Emission"), FindProperty("_EmissionMap", properties), FindProperty("_EmissionColor", properties));
                 materialEditor.TextureScaleOffsetProperty(FindProperty("_BaseMap", properties));
