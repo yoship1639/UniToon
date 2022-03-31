@@ -7,8 +7,9 @@ namespace UniToon
 {
     public enum UniToonVersion
     {
-        Unknown,
-        URP_2021_2,
+        Unknown = 0,
+        URP_2021_2 = 1212,
+        URP_2021_1 = 1211,
     }
 
     public enum WorkflowMode

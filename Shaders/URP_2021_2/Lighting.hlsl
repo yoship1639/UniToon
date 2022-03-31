@@ -1,9 +1,12 @@
-#ifndef UNITOON_LIGHTING_INCLUDED
-#define UNITOON_LIGHTING_INCLUDED
+#ifndef UNITOON_2021_2_LIGHTING_INCLUDED
+#define UNITOON_2021_2_LIGHTING_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
+#if !defined(INV_PI)
 #define INV_PI 0.318309
+#endif
+
 #define UNITOON_BRIGHTNESS 0.55
 
 void UniToonLightingPhysicallyBased(BRDFData brdfData,

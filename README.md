@@ -1,6 +1,6 @@
 # UniToon
 
-ver 0.7.1
+ver 0.8.0
 
 A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future.
 
@@ -22,7 +22,7 @@ UniToon supports any light environment implemented by Unity.
 * Environment Lighting (Skybox, Gradient, Color)
 * Reflection Probes
 
-The following shader paths are also supported for situations where these are required
+The following shader passes are also supported for situations where these are required
 * ShadowCaster
 * DepthOnly
 * DepthNormals
@@ -50,7 +50,7 @@ Unity Version
 | ------------- | ------------      |
 |  Unity2019.x  | Not yet           |
 |  Unity2020.x  | Not yet           |
-|  Unity2021.x  | Yes (2021.2 only) |
+|  Unity2021.x  | Yes               |
 
 ## Gallery
 

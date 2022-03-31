@@ -15,17 +15,12 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.7.1");
+            GUILayout.Label("UniToon ver 0.8.0");
 
             EditorGUILayout.Space();
-            EditorGUI.BeginChangeCheck();
-            var ver = UniToonVersion.URP_2021_2;
-            if (mat.shader.name.Contains(UniToonVersion.URP_2021_2.ToString()))
-            {
-                ver = UniToonVersion.URP_2021_2;
-            }
-            ver = (UniToonVersion)EditorGUILayout.EnumPopup("Version", ver);
-            if (EditorGUI.EndChangeCheck())
+            changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
+            var ver = ((UniToonVersion)mat.GetInt("_UniToonVer"));
+            if (changed)
             {
                 var shader = Shader.Find($"UniToon/{ver.ToString()}/Lit");
                 if (shader == null)
@@ -33,8 +28,11 @@ namespace UniToon
                     Debug.LogError($"UniToon/{ver.ToString()}/Lit shader not found.");
                     return;
                 }
-                mat.shader = shader;
-                MaterialConverter.MaterialChanged(mat, ver);
+                foreach (Material m in materialEditor.targets)
+                {
+                    m.shader = shader;
+                    MaterialConverter.MaterialChanged(m, ver);
+                }
             }
 
             // workflow

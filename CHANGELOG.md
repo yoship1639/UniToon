@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.8.0] - 2022-03-31
+### Changes
+- Add shader ver 2021.1.
+- Fix UniToon version enum.
+
 ## [0.7.1] - 2022-03-28
 ### Changes
 - Fix material gui.

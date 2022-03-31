@@ -1,5 +1,5 @@
-#ifndef UNITOON_2021_2_FUNCTIONS_INCLUDED
-#define UNITOON_2021_2_FUNCTIONS_INCLUDED
+#ifndef UNITOON_FUNCTIONS_INCLUDED
+#define UNITOON_FUNCTIONS_INCLUDED
 
 inline half invlerp(const half start, const half end, const half t)
 {

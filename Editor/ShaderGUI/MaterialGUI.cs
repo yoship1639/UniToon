@@ -45,7 +45,7 @@ namespace UniToon
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = prop.hasMixedValue;
-            var val = (T)System.Enum.ToObject(typeof(T), (byte)prop.floatValue);
+            var val = (T)System.Enum.ToObject(typeof(T), (int)prop.floatValue);
             val = (T)EditorGUILayout.EnumPopup(label, val);
             EditorGUI.showMixedValue = false;
             var res = EditorGUI.EndChangeCheck();

@@ -1,11 +1,10 @@
-#ifndef UNITOON_2021_2_LIT_INPUT_INCLUDED
-#define UNITOON_2021_2_LIT_INPUT_INCLUDED
+#ifndef UNITOON_2021_1_LIT_INPUT_INCLUDED
+#define UNITOON_2021_1_LIT_INPUT_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/ParallaxMapping.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DBuffer.hlsl"
 
 #if defined(_DETAIL_MULX2) || defined(_DETAIL_SCALED)
 #define _DETAIL
@@ -43,6 +42,7 @@ half _OutlineLightAffects;
 half _OutlineStrength;
 half _OutlineSmoothness;
 half _PostBrightness;
+half _ReceiveShadow;
 CBUFFER_END
 
 // NOTE: Do not ifdef the properties for dots instancing, but ifdef the actual usage.
@@ -77,6 +77,7 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineStrength)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineSmoothness)
     UNITY_DOTS_INSTANCED_PROP(float , _PostBrightness)
+    UNITY_DOTS_INSTANCED_PROP(float , _ReceiveShadow)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
 #define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ToonyFactor)
@@ -106,6 +107,7 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 #define _OutlineStrength        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineStrength)
 #define _OutlineSmoothness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineSmoothness)
 #define _PostBrightness         UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostBrightness)
+#define _ReceiveShadow          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ReceiveShadow)
 #endif
 
 TEXTURE2D(_ShadeMap);           SAMPLER(sampler_ShadeMap);
@@ -131,7 +133,7 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
     half4 specGloss;
 
 #ifdef _METALLICSPECGLOSSMAP
-    specGloss = half4(SAMPLE_METALLICSPECULAR(uv));
+    specGloss = SAMPLE_METALLICSPECULAR(uv);
     #ifdef _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         specGloss.a = albedoAlpha * _Smoothness;
     #else
@@ -156,17 +158,17 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
 
 half SampleOcclusion(float2 uv)
 {
-    #ifdef _OCCLUSIONMAP
-        // TODO: Controls things like these by exposing SHADER_QUALITY levels (low, medium, high)
-        #if defined(SHADER_API_GLES)
-            return SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, uv).g;
-        #else
-            half occ = SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, uv).g;
-            return LerpWhiteTo(occ, _OcclusionStrength);
-        #endif
-    #else
-        return half(1.0);
-    #endif
+#ifdef _OCCLUSIONMAP
+// TODO: Controls things like these by exposing SHADER_QUALITY levels (low, medium, high)
+#if defined(SHADER_API_GLES)
+    return SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, uv).g;
+#else
+    half occ = SAMPLE_TEXTURE2D(_OcclusionMap, sampler_OcclusionMap, uv).g;
+    return LerpWhiteTo(occ, _OcclusionStrength);
+#endif
+#else
+    return 1.0;
+#endif
 }
 
 
@@ -206,7 +208,7 @@ half3 ScaleDetailAlbedo(half3 detailAlbedo, half scale)
     // return detailAlbedo * 2.0f;
 
     // A bit more optimized
-    return half(2.0) * detailAlbedo * scale - scale + half(1.0);
+    return 2.0h * detailAlbedo * scale - scale + 1.0h;
 }
 
 half3 ApplyDetailAlbedo(float2 detailUv, half3 albedo, half detailMask)
@@ -218,7 +220,7 @@ half3 ApplyDetailAlbedo(float2 detailUv, half3 albedo, half detailMask)
 #if defined(_DETAIL_SCALED)
     detailAlbedo = ScaleDetailAlbedo(detailAlbedo, _DetailAlbedoMapScale);
 #else
-    detailAlbedo = half(2.0) * detailAlbedo;
+    detailAlbedo = 2.0h * detailAlbedo;
 #endif
 
     return albedo * LerpWhiteTo(detailAlbedo, detailMask);
@@ -255,11 +257,11 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     outSurfaceData.albedo = albedoAlpha.rgb * _BaseColor.rgb;
 
 #if _SPECULAR_SETUP
-    outSurfaceData.metallic = half(1.0);
+    outSurfaceData.metallic = 1.0h;
     outSurfaceData.specular = specGloss.rgb;
 #else
     outSurfaceData.metallic = specGloss.r;
-    outSurfaceData.specular = half3(0.0, 0.0, 0.0);
+    outSurfaceData.specular = half3(0.0h, 0.0h, 0.0h);
 #endif
 
     outSurfaceData.smoothness = specGloss.a;
@@ -272,8 +274,8 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     outSurfaceData.clearCoatMask       = clearCoat.r;
     outSurfaceData.clearCoatSmoothness = clearCoat.g;
 #else
-    outSurfaceData.clearCoatMask       = half(0.0);
-    outSurfaceData.clearCoatSmoothness = half(0.0);
+    outSurfaceData.clearCoatMask       = 0.0h;
+    outSurfaceData.clearCoatSmoothness = 0.0h;
 #endif
 
 #if defined(_DETAIL)
@@ -281,6 +283,7 @@ inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfa
     float2 detailUv = uv * _DetailAlbedoMap_ST.xy + _DetailAlbedoMap_ST.zw;
     outSurfaceData.albedo = ApplyDetailAlbedo(detailUv, outSurfaceData.albedo, detailMask);
     outSurfaceData.normalTS = ApplyDetailNormal(detailUv, outSurfaceData.normalTS, detailMask);
+
 #endif
 }
 
