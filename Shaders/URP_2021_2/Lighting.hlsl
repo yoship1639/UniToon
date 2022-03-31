@@ -7,7 +7,7 @@
 #define INV_PI 0.318309
 #endif
 
-#define UNITOON_BRIGHTNESS 0.55
+// #define UNITOON_BRIGHTNESS 0.55
 
 void UniToonLightingPhysicallyBased(BRDFData brdfData,
     half3 lightColor, half3 lightDirectionWS, half distanceAttenuation, half shadowAttenuation,
@@ -98,7 +98,7 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
     lightingData.giColor = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
                                               inputData.bakedGI, aoFactor.indirectAmbientOcclusion, inputData.positionWS,
-                                              inputData.normalWS, inputData.viewDirectionWS);
+                                              inputData.normalWS, inputData.viewDirectionWS) * _PostGIIntensity;
 
     half3 totalColor = 0;
     totalRamp = 0;
@@ -148,8 +148,8 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     #endif
 
     totalRamp = saturate(totalRamp);
-    lightingData.mainLightColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) + totalSpec;
-    lightingData.mainLightColor *= UNITOON_BRIGHTNESS;
+    lightingData.mainLightColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) * INV_PI * _PostDiffuseIntensity + totalSpec * _PostSpecularIntensity;
+    //lightingData.mainLightColor *= UNITOON_BRIGHTNESS;
     lightingData.additionalLightsColor = 0;
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)

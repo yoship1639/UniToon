@@ -15,7 +15,7 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.9.1");
+            GUILayout.Label("UniToon ver 0.10.0");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -127,10 +127,13 @@ namespace UniToon
             }
 
             // post process
-            BeginSection("Post Process");
+            BeginSection("Post-Processing");
             {
-                changed |= MaterialGUI.Slider("Post Brightness", FindProperty("_PostBrightness", properties), 0.0f, 2.0f);
+                changed |= MaterialGUI.Slider("Diffuse Intensity", FindProperty("_PostDiffuseIntensity", properties), 0.0f, 2.0f);
+                changed |= MaterialGUI.Slider("Specular Intensity", FindProperty("_PostSpecularIntensity", properties), 0.0f, 2.0f);
+                changed |= MaterialGUI.Slider("GI Intensity", FindProperty("_PostGIIntensity", properties), 0.0f, 2.0f);
 
+                EditorGUILayout.HelpBox("Basically, it is recommended not to change the post-processing values", MessageType.Info);
                 changed |= EndSection();
             }
 

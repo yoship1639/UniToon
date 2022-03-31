@@ -57,7 +57,9 @@ Shader "UniToon/URP_2021_1/Lit"
         _OutlineStrength("Outline Strength", Range(0.0, 1.0)) = 0.5
         _OutlineSmoothness("Outline Smoothness", Range(0.0, 1.0)) = 1.0
 
-        _PostBrightness("Post Brightness", Range(0.0, 2.0)) = 1.0
+        _PostDiffuseIntensity("Post Diffuse Intensity", Range(0.0, 2.0)) = 1.0
+        _PostSpecularIntensity("Post Specular Intensity", Range(0.0, 2.0)) = 1.0
+        _PostGIIntensity("Post GI Intensity", Range(0.0, 2.0)) = 1.0
 
         [HideInInspector] _ReceiveShadow("Receive Shadow", Float) = 1.0
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0

@@ -41,8 +41,10 @@ half _OutlineWidth;
 half _OutlineLightAffects;
 half _OutlineStrength;
 half _OutlineSmoothness;
-half _PostBrightness;
 half _ReceiveShadow;
+half _PostDiffuseIntensity;
+half _PostSpecularIntensity;
+half _PostGIIntensity;
 CBUFFER_END
 
 // NOTE: Do not ifdef the properties for dots instancing, but ifdef the actual usage.
@@ -76,8 +78,10 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineLightAffects)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineStrength)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineSmoothness)
-    UNITY_DOTS_INSTANCED_PROP(float , _PostBrightness)
     UNITY_DOTS_INSTANCED_PROP(float , _ReceiveShadow)
+    UNITY_DOTS_INSTANCED_PROP(float , _PostDiffuseIntensity)
+    UNITY_DOTS_INSTANCED_PROP(float , _PostSpecularIntensity)
+    UNITY_DOTS_INSTANCED_PROP(float , _PostGIIntensity)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
 #define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ToonyFactor)
@@ -106,8 +110,10 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 #define _OutlineLightAffects    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineLightAffects)
 #define _OutlineStrength        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineStrength)
 #define _OutlineSmoothness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineSmoothness)
-#define _PostBrightness         UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostBrightness)
 #define _ReceiveShadow          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ReceiveShadow)
+#define _PostDiffuseIntensity   UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostDiffuseIntensity)
+#define _PostSpecularIntensity  UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostSpecularIntensity)
+#define _PostGIIntensity        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostGIIntensity)
 #endif
 
 TEXTURE2D(_ShadeMap);           SAMPLER(sampler_ShadeMap);
