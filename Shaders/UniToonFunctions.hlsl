@@ -1,5 +1,5 @@
-#ifndef UNITOON_FUNCTIONS_INCLUDED
-#define UNITOON_FUNCTIONS_INCLUDED
+#ifndef UNITOON_2021_2_FUNCTIONS_INCLUDED
+#define UNITOON_2021_2_FUNCTIONS_INCLUDED
 
 inline half invlerp(const half start, const half end, const half t)
 {
@@ -38,7 +38,8 @@ float SoftOutline(float2 uv, half width, half strength, half power)
     width = (w + 0.5) * 0.5;
     float2 delta = (1.0 / _ScreenParams.xy) * width;
 
-    float depthes[8];
+    const int SAMPLE = 8;
+    float depthes[SAMPLE];
     depthes[0] = sampleSceneDepth(uv + float2(-delta.x, -delta.y));
     depthes[1] = sampleSceneDepth(uv + float2(-delta.x,  0.0)    );
     depthes[2] = sampleSceneDepth(uv + float2(-delta.x,  delta.y));
@@ -48,15 +49,15 @@ float SoftOutline(float2 uv, half width, half strength, half power)
     depthes[6] = sampleSceneDepth(uv + float2(delta.x,   0.0)    );
     depthes[7] = sampleSceneDepth(uv + float2(delta.x,   delta.y));
 
-    float coeff[8] = {0.7071, 1.0, 0.7071, 1.0, 1.0, 0.7071, 1.0, 0.7071};
+    float coeff[SAMPLE] = {0.7071, 1.0, 0.7071, 1.0, 1.0, 0.7071, 1.0, 0.7071};
 
     float depthValue = 0;
-    float str = pow(20.0, strength * 10.0);
+    float str = pow(20.0, strength * 10.0) * 0.5;
     float smoothness = 1.0 / remap(power, 0.0, 1.0, 0.01, 0.3);
     [unroll]
-    for (int j = 0; j < 8; j++)
+    for (int j = 0; j < SAMPLE; j++)
     {
-        float sub = max(depthes[j] - sceneDepth, 0.0);
+        float sub = abs(depthes[j] - sceneDepth);
         sub = pow(sub, smoothness);
         sub *= str * coeff[j];
         depthValue += sub;

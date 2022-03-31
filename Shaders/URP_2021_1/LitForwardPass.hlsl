@@ -2,7 +2,7 @@
 #define UNITOON_2021_1_FORWARD_LIT_PASS_INCLUDED
 
 #include "./Lighting.hlsl"
-#include "./UniToonFunctions.hlsl"
+#include "../UniToonFunctions.hlsl"
 
 // GLES2 has limited amount of interpolators
 #if defined(_PARALLAXMAP) && !defined(SHADER_API_GLES)

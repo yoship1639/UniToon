@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.9.0] - 2022-03-31
+### Changes
+- Fix outline logic.
+
 ## [0.8.0] - 2022-03-31
 ### Changes
 - Add shader ver 2021.1.
