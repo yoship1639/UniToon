@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.11.0] - 2022-03-31
+### Changes
+- Removed UniversalGBuffer pass.
+- Fixed UniversalForward pass to UniversalForwardOnly pass.
+
 ## [0.10.0] - 2022-03-31
 ### Changes
 - Fixed lighting logic.
