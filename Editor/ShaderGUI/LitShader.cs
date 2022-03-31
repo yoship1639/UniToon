@@ -15,7 +15,7 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.11.0-alpha");
+            GUILayout.Label("UniToon ver 0.12.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -132,6 +132,8 @@ namespace UniToon
                 changed |= MaterialGUI.Slider("Diffuse Intensity", FindProperty("_PostDiffuseIntensity", properties), 0.0f, 2.0f);
                 changed |= MaterialGUI.Slider("Specular Intensity", FindProperty("_PostSpecularIntensity", properties), 0.0f, 2.0f);
                 changed |= MaterialGUI.Slider("GI Intensity", FindProperty("_PostGIIntensity", properties), 0.0f, 2.0f);
+                changed |= MaterialGUI.Slider("MainLight Hi-Cut Intensity", FindProperty("_MainLightHiCut", properties), 0.0f, 10.0f);
+                changed |= MaterialGUI.Slider("AdditionalLight Hi-Cut Intensity", FindProperty("_AdditionalLightHiCut", properties), 0.0f, 10.0f);
 
                 EditorGUILayout.HelpBox("Basically, it is recommended not to change the post-processing values", MessageType.Info);
                 changed |= EndSection();

@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.12.0] - 2022-04-01
+### Changes
+- Added Hi-Cut filter parameters.
+
 ## [0.11.0] - 2022-03-31
 ### Changes
 - Removed UniversalGBuffer pass.

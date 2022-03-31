@@ -60,6 +60,8 @@ Shader "UniToon/URP_2021_1/Lit"
         _PostDiffuseIntensity("Post Diffuse Intensity", Range(0.0, 2.0)) = 1.0
         _PostSpecularIntensity("Post Specular Intensity", Range(0.0, 2.0)) = 1.0
         _PostGIIntensity("Post GI Intensity", Range(0.0, 2.0)) = 1.0
+        _MainLightHiCut("MainLight Hi-Cut Intensity", Range(0.0, 10.0)) = 10.0
+        _AdditionalLightHiCut("AdditionalLight Hi-Cut Intensity", Range(0.0, 10.0)) = 10.0
 
         [HideInInspector] _ReceiveShadow("Receive Shadow", Float) = 1.0
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0

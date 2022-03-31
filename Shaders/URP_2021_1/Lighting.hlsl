@@ -94,6 +94,8 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 #endif
 
     Light mainLight = GetMainLight(inputData.shadowCoord, inputData.positionWS, shadowMask);
+    half mainLightColorMax = max(mainLight.color.r, max(mainLight.color.g, mainLight.color.b));
+    if (mainLightColorMax > _MainLightHiCut) mainLight.color = normalize(mainLight.color) * _MainLightHiCut;
 
     #if defined(_SCREEN_SPACE_OCCLUSION)
         AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(inputData.normalizedScreenSpaceUV);
@@ -127,6 +129,9 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
     {
         Light light = GetAdditionalLight(lightIndex, inputData.positionWS, shadowMask);
+        half lightColorMax = max(light.color.r, max(light.color.g, light.color.b));
+        if (lightColorMax > _AdditionalLightHiCut) light.color = normalize(light.color) * _AdditionalLightHiCut;
+
         #if defined(_SCREEN_SPACE_OCCLUSION)
             light.color *= aoFactor.directAmbientOcclusion;
         #endif

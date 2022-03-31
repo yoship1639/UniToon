@@ -89,7 +89,10 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     half4 shadowMask = CalculateShadowMask(inputData);
     AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
     uint meshRenderingLayers = GetMeshRenderingLightLayer();
+
     Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
+    half mainLightColorMax = max(mainLight.color.r, max(mainLight.color.g, mainLight.color.b));
+    if (mainLightColorMax > _MainLightHiCut) mainLight.color = normalize(mainLight.color) * _MainLightHiCut;
 
     // NOTE: We don't apply AO to the GI here because it's done in the lighting calculation below...
     MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI);
@@ -123,6 +126,8 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     for (uint lightIndex = 0; lightIndex < min(_AdditionalLightsDirectionalCount, MAX_VISIBLE_LIGHTS); lightIndex++)
     {
         Light light = GetAdditionalLight(lightIndex, inputData, shadowMask, aoFactor);
+        half lightColorMax = max(light.color.r, max(light.color.g, light.color.b));
+        if (lightColorMax > _AdditionalLightHiCut) light.color = normalize(light.color) * _AdditionalLightHiCut;
 
         if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
         {
@@ -136,6 +141,8 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
     LIGHT_LOOP_BEGIN(pixelLightCount)
         Light light = GetAdditionalLight(lightIndex, inputData, shadowMask, aoFactor);
+        half lightColorMax = max(light.color.r, max(light.color.g, light.color.b));
+        if (lightColorMax > _AdditionalLightHiCut) light.color = normalize(light.color) * _AdditionalLightHiCut;
 
         if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
         {
