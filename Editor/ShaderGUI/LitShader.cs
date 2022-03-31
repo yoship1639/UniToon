@@ -15,7 +15,7 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.9.0");
+            GUILayout.Label("UniToon ver 0.9.1");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -44,7 +44,7 @@ namespace UniToon
 
                 if ((BlendMode)mat.GetFloat("_Blend") == BlendMode.Cutout)
                 {
-                    changed |= MaterialGUI.Slider("Alpha Cutoff", FindProperty("_Cull", properties), 0.0f, 1.0f);
+                    changed |= MaterialGUI.Slider("Alpha Cutoff", FindProperty("_Cutoff", properties), 0.0f, 1.0f);
                 }
                 changed |= MaterialGUI.Toggle("Receive Shadow", FindProperty("_ReceiveShadow", properties));
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.9.1] - 2022-03-31
+### Changes
+- Fixed problem with transparency not working.
+- Fixed problem with non-adjustable cutouts.
+
 ## [0.9.0] - 2022-03-31
 ### Changes
 - Fix outline logic.

@@ -61,7 +61,6 @@ Shader "UniToon/URP_2021_2/Lit"
 
         [HideInInspector] _ReceiveShadow("Receive Shadow", Float) = 1.0
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0
-        [HideInInspector] _Surface("__surface", Float) = 0.0
         [HideInInspector] _Blend("__blend", Float) = 0.0
         [HideInInspector] _Cull("__cull", Float) = 2.0
         [HideInInspector] _AlphaClip("__clip", Float) = 0.0

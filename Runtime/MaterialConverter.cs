@@ -47,6 +47,8 @@ namespace UniToon
         {
 #if UNITY_2021_2
             return UniToonVersion.URP_2021_2;
+#elif UNITY_2021_1
+            return UniToonVersion.URP_2021_1;
 #else
             return UniToonVersion.Unknown;
 #endif
