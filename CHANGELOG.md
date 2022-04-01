@@ -1,9 +1,10 @@
 # Changelog
 
-## [0.15.1] - 2022-04-02
+## [0.16.0] - 2022-04-02
 ### Changes
 - Fixed a bug that specular color not working.
 - Fixed Hi-Cut filter were not working correctly.
+- Added Min Brightness parameter.
 
 ## [0.15.0] - 2022-04-01
 ### Changes

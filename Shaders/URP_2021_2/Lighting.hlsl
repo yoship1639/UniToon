@@ -2,6 +2,7 @@
 #define UNITOON_2021_2_LIGHTING_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "../UniToonFunctions.hlsl"
 
 #if !defined(INV_PI)
 #define INV_PI 0.318309
@@ -10,30 +11,31 @@
 void UniToonLightingPhysicallyBased(BRDFData brdfData,
     half3 lightColor, half3 lightDirectionWS, half distanceAttenuation, half shadowAttenuation,
     half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff,
-    half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec)
+    half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec, out half3 bright)
 {
     half NdotL = saturate(dot(normalWS, lightDirectionWS));
     half lightAttenuation = distanceAttenuation * shadowAttenuation;
     ramp = 1.0 - NdotL;
     ramp = pow(ramp, 1 / toonyFactor);
     ramp = 1.0 - ramp;
+    bright = lightColor * lightAttenuation * ramp;
     ramp *= shadowAttenuation;
     color = lightColor * lightAttenuation * brdfData.diffuse;
     spec = 0;
-    half3 col = lightColor * distanceAttenuation * lerp(shadeColor, brdfData.diffuse, ramp);
-    half3 radiance = lightColor * (lightAttenuation * NdotL);
 
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
+        half3 radiance = lightColor * (lightAttenuation * NdotL);
         spec = brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS) * radiance;
+        bright += spec;
     }
 #endif // _SPECULARHIGHLIGHTS_OFF
 }
 
-void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec)
+void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec, out half3 bright)
 {
-    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec);
+    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec, bright);
 }
 
 half3 UniToonLightingLambert(half3 lightColor, half3 lightDir, half3 normal)
@@ -99,20 +101,23 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
                                               inputData.bakedGI, aoFactor.indirectAmbientOcclusion, inputData.positionWS,
                                               inputData.normalWS, inputData.viewDirectionWS) * _PostGIIntensity;
 
+    half3 totalBright = lightingData.giColor;
     half3 totalColor = 0;
     totalRamp = 0;
     half3 totalSpec = 0;
 
+    half3 bright = 0;
     half3 color = 0;
     half ramp = 0;
     half3 spec = 0;
 
     if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
     {
-        UniToonLightingPhysicallyBased(brdfData, mainLight, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec);
+        UniToonLightingPhysicallyBased(brdfData, mainLight, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec, bright);
         totalColor += color;
         totalRamp += ramp;
         totalSpec += spec;
+        totalBright += bright;
     }
 
     #if defined(_ADDITIONAL_LIGHTS)
@@ -127,10 +132,11 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
         if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
         {
-            UniToonLightingPhysicallyBased(brdfData, light, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec);
+            UniToonLightingPhysicallyBased(brdfData, light, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec, bright);
             totalColor += color;
             totalRamp += ramp;
             totalSpec += spec;
+            totalBright += bright;
         }
     }
     #endif
@@ -142,17 +148,20 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
         if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
         {
-            UniToonLightingPhysicallyBased(brdfData, light, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec);
+            UniToonLightingPhysicallyBased(brdfData, light, inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec, bright);
             totalColor += color;
             totalRamp += ramp;
             totalSpec += spec;
+            totalBright += bright;
         }
     LIGHT_LOOP_END
     #endif
 
     totalRamp = saturate(totalRamp);
+    half finalBright = saturate(maxcolor(totalBright));
+    finalBright = saturate(lerp(_PostMinBrightness, 1, finalBright * 4.0));
     lightingData.mainLightColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) * INV_PI * _PostDiffuseIntensity + totalSpec * _PostSpecularIntensity;
-    //lightingData.mainLightColor *= UNITOON_BRIGHTNESS;
+    lightingData.mainLightColor *= finalBright;
     lightingData.additionalLightsColor = 0;
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)

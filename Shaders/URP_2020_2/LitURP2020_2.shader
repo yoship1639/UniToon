@@ -61,6 +61,7 @@ Shader "UniToon/URP_2020_2/Lit"
         _PostDiffuseIntensity("Post Diffuse Intensity", Range(0.0, 2.0)) = 1.0
         _PostSpecularIntensity("Post Specular Intensity", Range(0.0, 2.0)) = 1.0
         _PostGIIntensity("Post GI Intensity", Range(0.0, 2.0)) = 1.0
+        _PostMinBrightness("Post Min Brightness", Range(0.0, 1.0)) = 0.1
         _MainLightHiCut("MainLight Hi-Cut Intensity", Range(0.0, 10.0)) = 10.0
         _AdditionalLightHiCut("AdditionalLight Hi-Cut Intensity", Range(0.0, 10.0)) = 10.0
 

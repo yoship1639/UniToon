@@ -2,6 +2,7 @@
 #define UNITOON_2021_1_LIGHTING_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+#include "../UniToonFunctions.hlsl"
 
 #if !defined(INV_PI)
 #define INV_PI 0.318309
@@ -12,7 +13,7 @@
 void UniToonLightingPhysicallyBased(BRDFData brdfData,
     half3 lightColor, half3 lightDirectionWS, half distanceAttenuation, half shadowAttenuation,
     half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff,
-    half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec)
+    half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec, out half3 bright)
 {
     shadowAttenuation = lerp(1, shadowAttenuation, _ReceiveShadow);
     
@@ -21,23 +22,24 @@ void UniToonLightingPhysicallyBased(BRDFData brdfData,
     ramp = 1.0 - NdotL;
     ramp = pow(ramp, 1 / toonyFactor);
     ramp = 1.0 - ramp;
+    bright = lightColor * lightAttenuation * ramp;
     ramp *= shadowAttenuation;
     color = lightColor * lightAttenuation * brdfData.diffuse;
     spec = 0;
-    half3 col = lightColor * distanceAttenuation * lerp(shadeColor, brdfData.diffuse, ramp);
-    half3 radiance = lightColor * (lightAttenuation * NdotL);
 
 #ifndef _SPECULARHIGHLIGHTS_OFF
     [branch] if (!specularHighlightsOff)
     {
+        half3 radiance = lightColor * (lightAttenuation * NdotL);
         spec = brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS) * radiance;
+        bright += spec;
     }
 #endif // _SPECULARHIGHLIGHTS_OFF
 }
 
-void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec)
+void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec, out half3 bright)
 {
-    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec);
+    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec, bright);
 }
 
 half3 UniToonLightingLambert(half3 lightColor, half3 lightDir, half3 normal)
@@ -105,10 +107,12 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     half3 gi = GlobalIllumination(brdfData, brdfDataClearCoat, surfaceData.clearCoatMask,
                                      inputData.bakedGI, surfaceData.occlusion,
                                      inputData.normalWS, inputData.viewDirectionWS);
+    half3 totalBright = gi;
     half3 totalColor = 0;
     totalRamp = 0;
     half3 totalSpec = 0;
 
+    half3 bright = 0;
     half3 color = 0;
     half ramp = 0;
     half3 spec = 0;
@@ -116,11 +120,12 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
     UniToonLightingPhysicallyBased(brdfData, mainLight,
                                      inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff,
                                      shadeColor, toonyFactor,
-                                     color, ramp, spec);
+                                     color, ramp, spec, bright);
 
     totalColor += color;
     totalRamp += ramp;
     totalSpec += spec;
+    totalBright += bright;
 
 #ifdef _ADDITIONAL_LIGHTS
     uint pixelLightCount = GetAdditionalLightsCount();
@@ -136,17 +141,21 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
         UniToonLightingPhysicallyBased(brdfData, light,
                                          inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff,
                                          shadeColor, toonyFactor,
-                                         color, ramp, spec);
+                                         color, ramp, spec, bright);
 
         totalColor += color;
         totalRamp += ramp;
         totalSpec += spec;
+        totalBright += bright;
     }
 #endif
 
     totalRamp = saturate(totalRamp);
-    totalColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) * INV_PI * _PostDiffuseIntensity + totalSpec * _PostSpecularIntensity + gi * _PostGIIntensity;
-    //totalColor *= UNITOON_BRIGHTNESS;
+    half finalBright = saturate(maxcolor(totalBright));
+    finalBright = saturate(lerp(_PostMinBrightness, 1, finalBright * 4.0));
+    totalColor = lerp(shadeColor, max(shadeColor, totalColor), totalRamp) * INV_PI * _PostDiffuseIntensity + totalSpec * _PostSpecularIntensity;
+    totalColor *= finalBright;
+    totalColor += gi * _PostGIIntensity;
 
 #ifdef _ADDITIONAL_LIGHTS_VERTEX
     totalColor += inputData.vertexLighting * brdfData.diffuse;

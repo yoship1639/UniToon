@@ -23,6 +23,11 @@ half3 shift(half3 color, half3 shift)
     );
 }
 
+inline half maxcolor(half3 color)
+{
+    return max(color.r, max(color.g, color.b));
+}
+
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
 SamplerState my_linear_clamp_sampler;

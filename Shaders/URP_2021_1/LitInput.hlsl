@@ -46,6 +46,7 @@ half _ReceiveShadow;
 half _PostDiffuseIntensity;
 half _PostSpecularIntensity;
 half _PostGIIntensity;
+half _PostMinBrightness;
 half _MainLightHiCut;
 half _AdditionalLightHiCut;
 CBUFFER_END
@@ -86,6 +87,7 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _PostDiffuseIntensity)
     UNITY_DOTS_INSTANCED_PROP(float , _PostSpecularIntensity)
     UNITY_DOTS_INSTANCED_PROP(float , _PostGIIntensity)
+    UNITY_DOTS_INSTANCED_PROP(float , _PostMinBrightness)
     UNITY_DOTS_INSTANCED_PROP(float , _MainLightHiCut)
     UNITY_DOTS_INSTANCED_PROP(float , _AdditionalLightHiCut)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
@@ -121,6 +123,7 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 #define _PostDiffuseIntensity   UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostDiffuseIntensity)
 #define _PostSpecularIntensity  UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostSpecularIntensity)
 #define _PostGIIntensity        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostGIIntensity)
+#define _PostMinBrightness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostMinBrightness)
 #define _MainLightHiCut         UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_MainLightHiCut)
 #define _AdditionalLightHiCut   UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_AdditionalLightHiCut)
 #endif
