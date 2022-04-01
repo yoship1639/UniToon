@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.14.0] - 2022-04-01
+### Changes
+- Supports URP 2020.2.
+- Supports URP 2020.3.
+
 ## [0.13.0] - 2022-04-01
 ### Changes
 - Fixed Normal Correct logic.

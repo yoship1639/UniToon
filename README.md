@@ -1,6 +1,6 @@
 # UniToon
 
-ver 0.13.0-alpha
+ver 0.14.0-alpha
 
 A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future.
 
@@ -49,8 +49,11 @@ Unity Version
 |  Version      | Support           |
 | ------------- | ------------      |
 |  Unity2019.x  | Not yet           |
-|  Unity2020.x  | Not yet           |
-|  Unity2021.x  | Yes               |
+|  Unity2020.1  | Not yet           |
+|  Unity2020.2  | Yes               |
+|  Unity2020.3  | Yes               |
+|  Unity2021.1  | Yes               |
+|  Unity2021.2  | Yes               |
 
 ## Gallery
 

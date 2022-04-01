@@ -10,6 +10,8 @@ namespace UniToon
         Unknown = 0,
         URP_2021_2 = 1212,
         URP_2021_1 = 1211,
+        URP_2020_3 = 1203,
+        URP_2020_2 = 1202,
     }
 
     public enum WorkflowMode
@@ -49,6 +51,10 @@ namespace UniToon
             return UniToonVersion.URP_2021_2;
 #elif UNITY_2021_1
             return UniToonVersion.URP_2021_1;
+#elif UNITY_2020_3
+            return UniToonVersion.URP_2020_3;
+#elif UNITY_2020_2
+            return UniToonVersion.URP_2020_2;
 #else
             return UniToonVersion.Unknown;
 #endif
