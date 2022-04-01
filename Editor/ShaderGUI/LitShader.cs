@@ -15,7 +15,7 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.12.0-alpha");
+            GUILayout.Label("UniToon ver 0.13.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -69,7 +69,8 @@ namespace UniToon
             BeginSection("Shading");
             {
                 changed |= MaterialGUI.Slider("Toony Factor", FindProperty("_ToonyFactor", properties), 0.001f, 1.0f);
-                changed |= MaterialGUI.Slider("Normal Correct", FindProperty("_NormalCorrect", properties), 0.0f, 1.0f);
+                changed |= MaterialGUI.Slider("Spherical Normal Correct", FindProperty("_NormalCorrect", properties), 0.0f, 1.0f);
+                changed |= MaterialGUI.Vector3("Spherical Normal Correct Origin", FindProperty("_NormalCorrectOrigin", properties));
 
                 changed |= EndSection();
             }

@@ -30,6 +30,17 @@ namespace UniToon
             return res;
         }
 
+        public static bool Vector3(string label, MaterialProperty prop)
+        {
+            EditorGUI.BeginChangeCheck();
+            EditorGUI.showMixedValue = prop.hasMixedValue;
+            var val = EditorGUILayout.Vector3Field(label, prop.vectorValue);
+            EditorGUI.showMixedValue = false;
+            var res = EditorGUI.EndChangeCheck();
+            if (res) prop.vectorValue = val;
+            return res;
+        }
+
         public static bool Color(string label, MaterialProperty prop)
         {
             EditorGUI.BeginChangeCheck();

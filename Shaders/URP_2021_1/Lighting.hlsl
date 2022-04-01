@@ -12,13 +12,11 @@
 void UniToonLightingPhysicallyBased(BRDFData brdfData,
     half3 lightColor, half3 lightDirectionWS, half distanceAttenuation, half shadowAttenuation,
     half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff,
-    half3 shadeColor, half toonyFactor, half normalCorrect, out half3 color, out half ramp, out half3 spec)
+    half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec)
 {
-    //const float BRIGHTNESS = (INV_PI + 1.0) * 0.5;
-
     shadowAttenuation = lerp(1, shadowAttenuation, _ReceiveShadow);
     
-    half NdotL = saturate(dot(lerp(normalWS, viewDirectionWS, normalCorrect), lightDirectionWS));
+    half NdotL = saturate(dot(normalWS, lightDirectionWS));
     half lightAttenuation = distanceAttenuation * shadowAttenuation;
     ramp = 1.0 - NdotL;
     ramp = pow(ramp, 1 / toonyFactor);
@@ -37,9 +35,9 @@ void UniToonLightingPhysicallyBased(BRDFData brdfData,
 #endif // _SPECULARHIGHLIGHTS_OFF
 }
 
-void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, half normalCorrect, out half3 color, out half ramp, out half3 spec)
+void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec)
 {
-    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, normalCorrect, color, ramp, spec);
+    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec);
 }
 
 half3 UniToonLightingLambert(half3 lightColor, half3 lightDir, half3 normal)
@@ -65,7 +63,7 @@ half3 UniToonCalculateBlinnPhong(Light light, InputData inputData, SurfaceData s
 }
 
 
-half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 shadeColor, half toonyFactor, half normalCorrect, out half totalRamp)
+half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 shadeColor, half toonyFactor, out half totalRamp)
 {
 #ifdef _SPECULARHIGHLIGHTS_OFF
     bool specularHighlightsOff = true;
@@ -117,7 +115,7 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
     UniToonLightingPhysicallyBased(brdfData, mainLight,
                                      inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff,
-                                     shadeColor, toonyFactor, normalCorrect,
+                                     shadeColor, toonyFactor,
                                      color, ramp, spec);
 
     totalColor += color;
@@ -137,7 +135,7 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
         #endif
         UniToonLightingPhysicallyBased(brdfData, light,
                                          inputData.normalWS, inputData.viewDirectionWS, specularHighlightsOff,
-                                         shadeColor, toonyFactor, normalCorrect,
+                                         shadeColor, toonyFactor,
                                          color, ramp, spec);
 
         totalColor += color;

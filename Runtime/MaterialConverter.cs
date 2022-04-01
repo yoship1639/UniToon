@@ -65,7 +65,7 @@ namespace UniToon
             // workflow mode
             if ((WorkflowMode)mat.GetFloat("_WorkflowMode") == WorkflowMode.Specular)
             {
-                SetKeyword(mat, "_SPECGLOSSMAP", mat.GetTexture("_SpecGlossMap"));
+                SetKeyword(mat, "_METALLICGLOSSMAP", mat.GetTexture("_SpecGlossMap"));
                 SetKeyword(mat, "_SPECULAR_SETUP", true);
             }
             else

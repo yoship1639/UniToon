@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.13.0] - 2022-04-01
+### Changes
+- Fixed Normal Correct logic.
+- Fixed a bug that specular maps were not working.
+
 ## [0.12.0] - 2022-04-01
 ### Changes
 - Added Hi-Cut filter parameters.

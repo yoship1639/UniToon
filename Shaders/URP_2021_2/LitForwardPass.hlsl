@@ -60,6 +60,7 @@ struct Varyings
 #endif
 
     float4 screenPos                : TEXCOORD10;
+    float3 originWS                 : TEXCOORD11;
 
     float4 positionCS               : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -188,6 +189,7 @@ Varyings LitPassVertex(Attributes input)
 
     output.positionCS = vertexInput.positionCS;
     output.screenPos = output.positionCS;
+    output.originWS = TransformObjectToWorld(_NormalCorrectOrigin);
 
     return output;
 }
@@ -222,7 +224,14 @@ half4 LitPassFragment(Varyings input) : SV_Target
     half3 shadeColor = SAMPLE_TEXTURE2D(_ShadeMap, sampler_ShadeMap, input.uv).rgb;
     shadeColor = shift(shadeColor, half3(_ShadeHue, _ShadeSaturation, _ShadeBrightness)) * _ShadeColor.rgb;
     half ramp;
-    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, _NormalCorrect, ramp);
+
+    // normal correct
+    half3 normalCorrectWS = (input.positionWS - input.originWS);
+    normalCorrectWS.y = 0.0;
+    normalCorrectWS = normalize(normalCorrectWS);
+    inputData.normalWS = normalize(lerp(inputData.normalWS, normalCorrectWS, _NormalCorrect));
+
+    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, ramp);
 
     // Outline
 #if !(defined(_ALPHAPREMULTIPLY_ON) || defined(_ALPHABLEND_ON))
