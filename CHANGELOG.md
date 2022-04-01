@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.15.1] - 2022-04-02
+### Changes
+- Fixed a bug that specular color not working.
+- Fixed Hi-Cut filter were not working correctly.
+
 ## [0.15.0] - 2022-04-01
 ### Changes
 - Fixed a bug that metallic gloss maps were not working.

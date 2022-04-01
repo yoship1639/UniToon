@@ -147,6 +147,9 @@ half4 SampleMetallicSpecGloss(float2 uv, half albedoAlpha)
 
 #ifdef _METALLICSPECGLOSSMAP
     specGloss = half4(SAMPLE_METALLICSPECULAR(uv));
+    #if _SPECULAR_SETUP
+        specGloss.rgb *= _SpecColor.rgb;
+    #endif
     #ifdef _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
         specGloss.a = albedoAlpha * _Smoothness;
     #else
