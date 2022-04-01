@@ -71,12 +71,12 @@ namespace UniToon
             // workflow mode
             if ((WorkflowMode)mat.GetFloat("_WorkflowMode") == WorkflowMode.Specular)
             {
-                SetKeyword(mat, "_METALLICGLOSSMAP", mat.GetTexture("_SpecGlossMap"));
+                SetKeyword(mat, "_METALLICSPECGLOSSMAP", mat.GetTexture("_SpecGlossMap"));
                 SetKeyword(mat, "_SPECULAR_SETUP", true);
             }
             else
             {
-                SetKeyword(mat, "_METALLICGLOSSMAP", mat.GetTexture("_MetallicGlossMap"));
+                SetKeyword(mat, "_METALLICSPECGLOSSMAP", mat.GetTexture("_MetallicGlossMap"));
             }
             
             // parallax map

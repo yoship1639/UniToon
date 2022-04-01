@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.15.0] - 2022-04-01
+### Changes
+- Fixed a bug that metallic gloss maps were not working.
+- Fixed outline logic.
+- Added URP Lit to UniToon converter.
+
 ## [0.14.0] - 2022-04-01
 ### Changes
 - Supports URP 2020.2.

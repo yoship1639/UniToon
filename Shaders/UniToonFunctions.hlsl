@@ -25,9 +25,11 @@ half3 shift(half3 color, half3 shift)
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
+SamplerState my_linear_clamp_sampler;
+
 float sampleSceneDepth(float2 uv)
 {
-    float sceneDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uv);
+    float sceneDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, my_linear_clamp_sampler, uv);
     return Linear01Depth(sceneDepth, _ZBufferParams) * _ProjectionParams.z;
 }
 
