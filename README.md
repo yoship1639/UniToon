@@ -2,7 +2,7 @@
 
 ver 0.16.0-alpha
 
-A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future.
+Physics-based Toon Shader for gaming applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.
 
 ![img001.png](./Documents/img/img001.png)
 
