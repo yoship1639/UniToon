@@ -2,7 +2,7 @@
 
 ver 0.16.0-alpha
 
-Physics-based Toon Shader for gaming applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.
+Physically-based Toon Shader for game applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.
 
 ![img001.png](./Documents/img/img001.png)
 
