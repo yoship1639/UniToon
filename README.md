@@ -4,7 +4,7 @@ ver 0.18.0-alpha
 
 Physically-based Toon Shader for game applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.
 
-![img001.png](./Documents/img/img001.png)
+![img001.png](https://user-images.githubusercontent.com/8346139/161423546-9cccd29b-3015-4109-960f-900093c6c9ab.png)
 
 ## Features
 * Both Toon and PBR expressions
@@ -57,22 +57,6 @@ Unity Version
 
 ## Gallery
 
-Light intensity
-
-![img002.png](./Documents/img/img002.png)
-
-Light indirect multipiler
-
-![img003.png](./Documents/img/img003.png)
-
-Sky light intensity
-
-![img004.png](./Documents/img/img004.png)
-
-Red point light
-
-![img005.png](./Documents/img/img005.png)
-
 Red, Green and Blue lights
 
-![img006.png](./Documents/img/img006.png)
+![img006.png](https://user-images.githubusercontent.com/8346139/161423583-88898963-4395-40e2-98af-3a0b82c9ca69.png)

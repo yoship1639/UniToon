@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UniToon - Physical-based Toon Shader</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="./Documents/style.css">
+  <script src="https://kit.fontawesome.com/7dc3015a44.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+  <div class="heightmax">
+    <section class="hero is-light">
+      <div class="hero-body">
+        <div class="columns">
+          <div class="column is-12">
+            <div class="container content is-large">
+              <h1>UniToon</h1>
+              <p>
+                Unityの標準シェーダが持つ機能を踏襲した、滑らかなアウトライン表示が可能な物理ベーストゥーンシェーダ
+              </p>
+              <p>
+                <a href="https://github.com/yoship1639/UniToon" target="_blank" class="button is-dark">
+                  <span class="icon">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>Github</span>
+                </a>
+                <a href="https://github.com/yoship1639/UniToon/releases/latest" target="_blank" class="button is-link">
+                  <span class="icon">
+                    <i class="fas fa-download"></i>
+                  </span>
+                  <span>Download</span>
+                </a>
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+
+          <div class="column is-3">
+            <aside class="is-medium menu" style="position: fixed;">
+              <p class="menu-label">
+                リンク
+              </p>
+              <ul class="menu-list">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="./Documents/guidance.html">設定ガイダンス</a></li>
+                <li><a href="./Documents/documents.html">ドキュメント</a></li>
+                <li><a href="./Documents/changelog.html">変更履歴</a></li>
+              </ul>
+              <p></p>
+              <p class="menu-label">
+                目次
+              </p>
+              <ul class="menu-list">
+                <li><a href="#top">TOP</a></li>
+                <li><a href="#overview">概要</a></li>
+                <li><a href="#status">対応状況</a></li>
+                <li><a href="#features">機能</a></li>
+                <li><a href="#howto">設定方法</a></li>
+              </ul>
+          </div>
+
+          <div class="column is-9 container content">
+
+            <div id="top" class="block">
+              <figure class="image">
+                <img
+                  src="https://user-images.githubusercontent.com/8346139/161423546-9cccd29b-3015-4109-960f-900093c6c9ab.png">
+              </figure>
+              <p class="has-text-right">
+                Test model from <a
+                  href="https://3d.nicovideo.jp/works/td63650">https://3d.nicovideo.jp/works/td63650</a>
+              </p>
+            </div>
+
+            <div id="overview" class="block">
+              <h2>概要</h2>
+              <p>
+                UniToonはUnity標準のPBRシェーダであるLit(Standard)シェーダにアニメ調のキャラクター表現を可能にするトゥーン機能を組み込む事で、Litが標準で持つ描画機能をすべて踏襲しつつアニメ調表現を可能にした物理ベーストゥーンシェーダです。
+              </p>
+              <p>
+                トゥーンでありつつ周りの光環境にすべて影響するので、背景に非常になじんだ高品質な表現が可能となっています。
+              </p>
+              <p>
+                また、深度バッファを用いた独自のアウトライン手法を使っているため、既知の手法よりも遥かに高精細なアウトラインを実現しています。
+              </p>
+              <p>
+                ゲームでの利用を想定しているため特殊な映像表現機能は組み込む事はせず、汎用性やパフォーマンスを維持する事を念頭に開発を行っています。
+              </p>
+            </div>
+
+            <div id="status" class="block">
+              <h2>対応状況</h2>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Unity Version</th>
+                    <th>Built-in</th>
+                    <th>URP</th>
+                    <th>HDRP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>2019.1</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2019.2</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2019.3</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2019.4</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2020.1</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2020.2</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: rgb(0, 200, 0);"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2020.3</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: rgb(0, 200, 0);"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2021.1</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: rgb(0, 200, 0);"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr>
+                    <th>2021.2</th>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: rgb(0, 200, 0);"></i></span></td>
+                    <td><span><i class="fa fa-check" style="color: lightgray;"></i></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="features" class="block">
+              <h2>機能</h2>
+              <h4>マテリアル</h4>
+              <ul>
+                <li>ワークフロー（Metallic, Specular）</li>
+                <li>描画タイプ（Opaque, Cutout, Fade, Transparent）</li>
+                <li>描画面（Front, Back, Both）</li>
+                <li>影OnOff</li>
+                <li>基本色（Base Color, Base Map）</li>
+                <li>影色（Shade Color, Shade Map）</li>
+                <li>影色HSV補正</li>
+                <li>エミッション</li>
+                <li>トゥーン調補正</li>
+                <li>球面法線補正</li>
+                <li>金属度（Metallic, Metallic Map）</li>
+                <li>滑らかさ（Smoothness）</li>
+                <li>法線（Normal Map, Normal Strength）</li>
+                <li>高さ（Parallax Map, Parallax Strength）</li>
+                <li>オクルージョン（Occlusion Map, Occlusion Strength）</li>
+                <li>ディティール（Mask, Albedo, Normal）</li>
+                <li>アウトライン（Mask, Width, Strength, Smoothness, Saturation, Brightness, Light Affects）</li>
+                <li>ディフューズ補正</li>
+                <li>スペキュラ補正</li>
+                <li>グロバールイルミネーション補正</li>
+                <li>最低輝度</li>
+                <li>ハイカットフィルタ（Main Light, Additional Light）</li>
+              </ul>
+              <h4>描画パス</h4>
+              <ul>
+                <li>Forward</li>
+                <li>ShadowCaster</li>
+                <li>DepthOnly</li>
+                <li>DepthNormals</li>
+                <li>Meta</li>
+              </ul>
+              <h4>光環境</h4>
+              <ul>
+                <li>ライト（Directional, Point, Spot, Area）</li>
+                <li>ライト強度（Light Intensity）</li>
+                <li>ライト間接強度（Light Indirect Multipiler）</li>
+                <li>グローバルイルミネーション（Baked, Realtime）</li>
+                <li>リフレクションプローブ</li>
+                <li>ライトプローブ</li>
+                <li>環境光（Skybox, Gradient, Color）</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>UniToon</strong> by <a href="https://twitter.com/yoship1639">yoship1639</a>. The source code is
+          licensed
+          <a href="https://github.com/yoship1639/UniToon/blob/main/LICENSE">MIT</a>.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+</body>
+
+</html>
