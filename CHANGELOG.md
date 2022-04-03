@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.17.0] - 2022-04-03
+### Changes
+- Added MToon to UniToon converter.
+- Fixed changes did not work when multiple materials were selected.
+- Fixed AlphaCutoff in ShadowCasterPass for transparent materials to work.
+- Smoothness initial value changed from 0.5 to 0.25.
+
 ## [0.16.0] - 2022-04-02
 ### Changes
 - Fixed a bug that specular color not working.

@@ -1,6 +1,6 @@
 {
   "name": "com.yoship1639.unitoon",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "displayName": "UniToon",
   "description": "A universally usable toon shader. compliant with Unity standard rendering functions, aiming to create a shader that can withstand avatar use across platforms, such as VRM, which is expected to grow in the future",
   "unity": "2020.2",

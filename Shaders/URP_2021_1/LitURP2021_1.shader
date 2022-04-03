@@ -19,7 +19,7 @@ Shader "UniToon/URP_2021_1/Lit"
 
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
-        _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.5
+        _Smoothness("Smoothness", Range(0.0, 1.0)) = 0.25
         _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
 
         _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
@@ -108,6 +108,7 @@ Shader "UniToon/URP_2021_1/Lit"
             // Material Keywords
             #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
@@ -166,6 +167,8 @@ Shader "UniToon/URP_2021_1/Lit"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             //--------------------------------------
@@ -183,7 +186,7 @@ Shader "UniToon/URP_2021_1/Lit"
             #pragma fragment ShadowPassFragment
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "../ShadowCasterPass.hlsl"
             ENDHLSL
         }
 
@@ -336,6 +339,7 @@ Shader "UniToon/URP_2021_1/Lit"
             // Material Keywords
             #pragma shader_feature_local _NORMALMAP
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _EMISSION
             #pragma shader_feature_local_fragment _METALLICSPECGLOSSMAP
@@ -394,6 +398,8 @@ Shader "UniToon/URP_2021_1/Lit"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             // -------------------------------------
@@ -406,7 +412,7 @@ Shader "UniToon/URP_2021_1/Lit"
             #pragma fragment ShadowPassFragment
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "../ShadowCasterPass.hlsl"
             ENDHLSL
         }
 

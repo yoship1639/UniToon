@@ -15,7 +15,7 @@ namespace UniToon
             var changed = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.16.0-alpha");
+            GUILayout.Label("UniToon ver 0.17.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -42,7 +42,7 @@ namespace UniToon
                 changed |= MaterialGUI.Enum<BlendMode>("Shader Type", FindProperty("_Blend", properties));
                 changed |= MaterialGUI.Enum<RenderFace>("Render Face", FindProperty("_Cull", properties));
 
-                if ((BlendMode)mat.GetFloat("_Blend") == BlendMode.Cutout)
+                if ((BlendMode)mat.GetFloat("_Blend") != BlendMode.Opaque)
                 {
                     changed |= MaterialGUI.Slider("Alpha Cutoff", FindProperty("_Cutoff", properties), 0.0f, 1.0f);
                 }
@@ -154,7 +154,10 @@ namespace UniToon
 
             if (changed)
             {
-                MaterialConverter.MaterialChanged(mat, ver);
+                foreach (Material m in materialEditor.targets)
+                {
+                    MaterialConverter.MaterialChanged(m, ver);
+                }
             }
         }
 
