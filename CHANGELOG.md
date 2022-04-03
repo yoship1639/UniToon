@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.18.0] - 2022-04-03
+- Added Outline Mask property.
+- Fixed material gui.
+- Fixed problem with Render Queue changes not working.
+- Fixed MToon to UniToon converter.
+
 ## [0.17.0] - 2022-04-03
 - Added MToon to UniToon converter.
 - Fixed changes did not work when multiple materials were selected.

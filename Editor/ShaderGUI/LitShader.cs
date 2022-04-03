@@ -8,14 +8,46 @@ namespace UniToon
 {
     class LitShader : ShaderGUI
     {
+        private bool firstTime = true;
+        SavedBool fo_workflow;
+        SavedBool fo_baseColor;
+        SavedBool fo_shading;
+        SavedBool fo_physicalProperty;
+        SavedBool fo_surface;
+        SavedBool fo_detail;
+        SavedBool fo_outline;
+        SavedBool fo_postprocessing;
+        SavedBool fo_advanced;
+
+        void OnOpenGUI()
+        {
+            var prefix = "UniToonLitShaderGUI";
+            fo_workflow = new SavedBool($"{prefix}.Workflow", true);
+            fo_baseColor = new SavedBool($"{prefix}.BaseColor", true);
+            fo_shading = new SavedBool($"{prefix}.Shading", true);
+            fo_physicalProperty = new SavedBool($"{prefix}.PhysicalProperty", true);
+            fo_surface = new SavedBool($"{prefix}.Surface", true);
+            fo_detail = new SavedBool($"{prefix}.Detail", true);
+            fo_outline = new SavedBool($"{prefix}.Outline", true);
+            fo_postprocessing = new SavedBool($"{prefix}.PostProcessing", true);
+            fo_advanced = new SavedBool($"{prefix}.Advanced", true);
+        }
+
         public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
         {
             var mat = materialEditor.target as Material;
 
+            if (firstTime)
+            {
+                OnOpenGUI();
+                firstTime = false;
+            }
+
             var changed = false;
+            var blendModeChanged = false;
 
             // version
-            GUILayout.Label("UniToon ver 0.17.0-alpha");
+            GUILayout.Label("UniToon ver 0.18.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -36,23 +68,25 @@ namespace UniToon
             }
 
             // workflow
-            BeginSection("Workflow");
+            if (BeginSection("Workflow", fo_workflow))
             {
                 changed |= MaterialGUI.Enum<WorkflowMode>("Mode", FindProperty("_WorkflowMode", properties));
+                var prevBlend = (BlendMode)FindProperty("_Blend", properties).floatValue;
                 changed |= MaterialGUI.Enum<BlendMode>("Shader Type", FindProperty("_Blend", properties));
+                var newBlend = (BlendMode)FindProperty("_Blend", properties).floatValue;
+                blendModeChanged = prevBlend != newBlend;
                 changed |= MaterialGUI.Enum<RenderFace>("Render Face", FindProperty("_Cull", properties));
 
-                if ((BlendMode)mat.GetFloat("_Blend") != BlendMode.Opaque)
+                if (newBlend != BlendMode.Opaque)
                 {
                     changed |= MaterialGUI.Slider("Alpha Cutoff", FindProperty("_Cutoff", properties), 0.0f, 1.0f);
                 }
                 changed |= MaterialGUI.Toggle("Receive Shadow", FindProperty("_ReceiveShadow", properties));
-
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // base color
-            BeginSection("Base Color");
+            if (BeginSection("Base Color", fo_baseColor))
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Base"), FindProperty("_BaseMap", properties), FindProperty("_BaseColor", properties));
                 materialEditor.TexturePropertySingleLine(new GUIContent("Shade"), FindProperty("_ShadeMap", properties), FindProperty("_ShadeColor", properties));
@@ -61,22 +95,20 @@ namespace UniToon
                 changed |= MaterialGUI.Slider("Shade Brightness", FindProperty("_ShadeBrightness", properties), 0.0f, 1.0f);
                 materialEditor.TexturePropertySingleLine(new GUIContent("Emission"), FindProperty("_EmissionMap", properties), FindProperty("_EmissionColor", properties));
                 materialEditor.TextureScaleOffsetProperty(FindProperty("_BaseMap", properties));
-                
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // shading
-            BeginSection("Shading");
+            if (BeginSection("Shading", fo_shading))
             {
                 changed |= MaterialGUI.Slider("Toony Factor", FindProperty("_ToonyFactor", properties), 0.001f, 1.0f);
                 changed |= MaterialGUI.Slider("Spherical Normal Correct", FindProperty("_NormalCorrect", properties), 0.0f, 1.0f);
                 changed |= MaterialGUI.Vector3("Spherical Normal Correct Origin", FindProperty("_NormalCorrectOrigin", properties));
-
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // physical property
-            BeginSection("Physical Property");
+            if (BeginSection("Physical Property", fo_physicalProperty))
             {
                 var mode = (WorkflowMode)mat.GetFloat("_WorkflowMode");
                 if (mode == WorkflowMode.Metallic)
@@ -89,33 +121,31 @@ namespace UniToon
                 }
                 changed |= MaterialGUI.Slider("Smoothness", FindProperty("_Smoothness", properties), 0.0f, 1.0f);
                 changed |= MaterialGUI.Enum<SmoothnessMapChannel>("Smoothness Channel", FindProperty("_SmoothnessTextureChannel", properties));
-                
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // surface
-            BeginSection("Surface");
+            if (BeginSection("Surface", fo_surface))
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Normal"), FindProperty("_BumpMap", properties), mat.GetTexture("_BumpMap") ? FindProperty("_BumpScale", properties) : null);
                 materialEditor.TexturePropertySingleLine(new GUIContent("Height"), FindProperty("_ParallaxMap", properties), mat.GetTexture("_ParallaxMap") ? FindProperty("_Parallax", properties) : null);
                 materialEditor.TexturePropertySingleLine(new GUIContent("Occlusion"), FindProperty("_OcclusionMap", properties), mat.GetTexture("_OcclusionMap") ? FindProperty("_OcclusionStrength", properties) : null);
-                
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // detail
-            BeginSection("Detail");
+            if (BeginSection("Detail", fo_detail))
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Detail Mask"), FindProperty("_DetailMask", properties));
                 materialEditor.TexturePropertySingleLine(new GUIContent("Detail Albedo"), FindProperty("_DetailAlbedoMap", properties), mat.GetTexture("_DetailAlbedoMap") ? FindProperty("_DetailAlbedoMapScale", properties) : null);
                 materialEditor.TexturePropertySingleLine(new GUIContent("Detail Normal"), FindProperty("_DetailNormalMap", properties), mat.GetTexture("_DetailNormalMap") ? FindProperty("_DetailNormalMapScale", properties) : null);
-                
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // outline (experimental)
-            BeginSection("Outline (Experimental)");
+            if (BeginSection("Outline (Experimental)", fo_outline))
             {
+                materialEditor.TexturePropertySingleLine(new GUIContent("Outline Mask"), FindProperty("_OutlineMask", properties));
                 changed |= MaterialGUI.Slider("Outline Saturation", FindProperty("_OutlineSaturation", properties), 0.0f, 4.0f);
                 changed |= MaterialGUI.Slider("Outline Brightness", FindProperty("_OutlineBrightness", properties), 0.0f, 1.0f);
                 changed |= MaterialGUI.Slider("Outline Light Affects", FindProperty("_OutlineLightAffects", properties), 0.0f, 1.0f);
@@ -124,11 +154,11 @@ namespace UniToon
                 changed |= MaterialGUI.Slider("Outline Smoothness", FindProperty("_OutlineSmoothness", properties), 0.0f, 1.0f);
 
                 EditorGUILayout.HelpBox("Outline (Experimental) requires that the camera depth texture is enabled", MessageType.Info);
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // post process
-            BeginSection("Post-Processing");
+            if (BeginSection("Post-Processing", fo_postprocessing))
             {
                 changed |= MaterialGUI.Slider("Diffuse Intensity", FindProperty("_PostDiffuseIntensity", properties), 0.0f, 2.0f);
                 changed |= MaterialGUI.Slider("Specular Intensity", FindProperty("_PostSpecularIntensity", properties), 0.0f, 2.0f);
@@ -138,42 +168,45 @@ namespace UniToon
                 changed |= MaterialGUI.Slider("AdditionalLight Hi-Cut Intensity", FindProperty("_AdditionalLightHiCut", properties), 0.0f, 10.0f);
 
                 EditorGUILayout.HelpBox("Basically, it is recommended not to change the post-processing values", MessageType.Info);
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
             // advance
-            BeginSection("Advance");
+            if (BeginSection("Advanced", fo_advanced))
             {
                 materialEditor.RenderQueueField();
                 changed |= MaterialGUI.Toggle("Specular Highlights", FindProperty("_SpecularHighlights", properties));
                 changed |= MaterialGUI.Toggle("Environment Reflections", FindProperty("_EnvironmentReflections", properties));
                 materialEditor.EnableInstancingField();
-                
-                changed |= EndSection();
             }
+            changed |= EndSection();
 
-            if (changed)
+            if (changed || blendModeChanged)
             {
                 foreach (Material m in materialEditor.targets)
                 {
-                    MaterialConverter.MaterialChanged(m, ver);
+                    MaterialConverter.MaterialChanged(m, ver, blendModeChanged);
                 }
             }
         }
 
-        private static void BeginSection(string name)
+        private static bool BeginSection(string name, SavedBool foldout)
         {
             EditorGUILayout.Space();
-            GUILayout.Label(name, EditorStyles.boldLabel);
+            foldout.value = EditorGUILayout.BeginFoldoutHeaderGroup(foldout.value, name, EditorStyles.foldoutHeader);
             EditorGUI.indentLevel++;
             EditorGUI.BeginChangeCheck();
+            return foldout.value;
         }
 
         private static bool EndSection()
         {
+            EditorGUILayout.EndFoldoutHeaderGroup();
             EditorGUI.indentLevel--;
             return EditorGUI.EndChangeCheck();
         }
+
+        
     }
 
 }

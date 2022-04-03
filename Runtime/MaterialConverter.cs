@@ -60,7 +60,7 @@ namespace UniToon
 #endif
         }
 
-        public static void MaterialChanged(Material mat, UniToonVersion version, bool updateRenderQueue = true)
+        public static void MaterialChanged(Material mat, UniToonVersion version, bool updateRenderQueue = false)
         {
             // clear keywords
             mat.shaderKeywords = new string[0];
@@ -111,7 +111,7 @@ namespace UniToon
             SetKeyword(mat, "_EMISSION", color.maxColorComponent > 0.1f / 255.0f || realtimeEmission);
         }
 
-        private static void SetBlendMode(Material mat, bool updateRenderQueue = true)
+        private static void SetBlendMode(Material mat, bool updateRenderQueue = false)
         {
             var blendMode = (BlendMode)mat.GetFloat("_Blend");
 

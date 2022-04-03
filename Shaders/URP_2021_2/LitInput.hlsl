@@ -37,6 +37,7 @@ half _ClearCoatSmoothness;
 half _DetailAlbedoMapScale;
 half _DetailNormalMapScale;
 half _Surface;
+float4 _OutlineMask_ST;
 half _OutlineSaturation;
 half _OutlineBrightness;
 half _OutlineWidth;
@@ -135,7 +136,7 @@ TEXTURE2D(_DetailNormalMap);    SAMPLER(sampler_DetailNormalMap);
 TEXTURE2D(_MetallicGlossMap);   SAMPLER(sampler_MetallicGlossMap);
 TEXTURE2D(_SpecGlossMap);       SAMPLER(sampler_SpecGlossMap);
 TEXTURE2D(_ClearCoatMap);       SAMPLER(sampler_ClearCoatMap);
-TEXTURE2D(_OutlineMap);         SAMPLER(sampler_OutlineMap);
+TEXTURE2D(_OutlineMask);         SAMPLER(sampler_OutlineMask);
 
 
 #ifdef _SPECULAR_SETUP

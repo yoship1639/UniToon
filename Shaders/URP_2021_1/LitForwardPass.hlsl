@@ -193,7 +193,9 @@ half4 LitPassFragment(Varyings input) : SV_Target
     if (_OutlineWidth > 0.0 && _OutlineStrength > 0.0)
     {
         float2 screenPos = ComputeScreenPos(input.screenPos / input.screenPos.w).xy;
-        half outlineFactor = SoftOutline(screenPos, lerp(_OutlineWidth, _OutlineWidth * 0.5, ramp * _OutlineLightAffects), _OutlineStrength, _OutlineSmoothness);
+        half width = lerp(_OutlineWidth, _OutlineWidth * 0.5, ramp * _OutlineLightAffects);
+        width *= SAMPLE_TEXTURE2D(_OutlineMask, sampler_OutlineMask, input.uv).r;
+        half outlineFactor = SoftOutline(screenPos, width, _OutlineStrength, _OutlineSmoothness);
         color.rgb = lerp(color.rgb, shift(color.rgb, half3(0.0, _OutlineSaturation, lerp(_OutlineBrightness, saturate(_OutlineBrightness * 2.0), ramp * _OutlineLightAffects))), outlineFactor);
     }
 #endif

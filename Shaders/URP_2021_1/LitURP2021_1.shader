@@ -49,8 +49,7 @@ Shader "UniToon/URP_2021_1/Lit"
         _DetailNormalMapScale("Scale", Range(0.0, 2.0)) = 1.0
         [Normal] _DetailNormalMap("Normal Map", 2D) = "bump" {}
 
-        //_OutlineMap("Outline Map", 2D) = "white" {}
-        //_OutlineColor("Outline Color", Color) = (0.0, 0.0, 0.0)
+        _OutlineMask("Outline Mask", 2D) = "white" {}
         _OutlineWidth("Outline Width", Range(0.0, 20.0)) = 0.0
         _OutlineLightAffects("Outline Light Affects", Range(0.0, 1.0)) = 1.0
         _OutlineSaturation("Outline Saturation", Range(0.0, 4.0)) = 3.0

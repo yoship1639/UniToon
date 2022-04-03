@@ -78,6 +78,8 @@ namespace UniToon
             var dstBlend = (UnityEngine.Rendering.BlendMode)mat.GetFloat("_DstBlend");
             var cutout = mat.IsKeywordEnabled("_ALPHATEST_ON");
             var zwrite = mat.GetFloat("_ZWrite") >= 0.5f;
+            var outlineMask = mat.GetTexture("_OutlineWidthTexture");
+            var outlineWidth = mat.GetFloat("_OutlineWidth") * 20.0f;
 
             mat.shader = unitoon;
 
@@ -87,6 +89,8 @@ namespace UniToon
             mat.SetFloat("_ToonyFactor", toony);
             mat.SetFloat("_ReceiveShadow", receiveShadow ? 1.0f :0.0f);
             mat.SetFloat("_Cull", cull);
+            mat.SetTexture("_OutlineMask", outlineMask);
+            mat.SetFloat("_OutlineWidth", outlineWidth);
 
             if (srcBlend == UnityEngine.Rendering.BlendMode.One && dstBlend == UnityEngine.Rendering.BlendMode.Zero)
             {
