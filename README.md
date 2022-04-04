@@ -19,12 +19,13 @@ Physically-based Toon Shader for game applications. Compliant with Unity standar
 ## Compatible
 
 UniToon supports any light environment implemented by Unity.
-* Light(Directional, Point, Spot, Area)
+* Light (Directional, Point, Spot, Area)
 * Light Intensity, Indirect Multipiler
 * Baked Global Illmination
 * Realtime Global Illmination
 * Environment Lighting (Skybox, Gradient, Color)
 * Reflection Probes
+* Light Probes
 
 The following shader passes are also supported for situations where these are required
 * ShadowCaster
