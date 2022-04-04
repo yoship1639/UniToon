@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.18.1] - 2022-04-04
+- Fixed AlphaCutoff in DepthOnlyPass for transparent materials to work.
+- Fixed AlphaCutoff in DepthNormalsPass for transparent materials to work.
+
 ## [0.18.0] - 2022-04-03
 - Added Outline Mask property.
 - Fixed material gui.

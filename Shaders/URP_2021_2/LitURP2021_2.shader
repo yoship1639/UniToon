@@ -226,6 +226,8 @@ Shader "UniToon/URP_2021_2/Lit"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             //--------------------------------------
@@ -234,7 +236,7 @@ Shader "UniToon/URP_2021_2/Lit"
             #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            #include "../DepthOnlyPass.hlsl"
             ENDHLSL
         }
 
@@ -263,6 +265,8 @@ Shader "UniToon/URP_2021_2/Lit"
             #pragma shader_feature_local _PARALLAXMAP
             #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             //--------------------------------------
@@ -271,7 +275,7 @@ Shader "UniToon/URP_2021_2/Lit"
             #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
+            #include "../LitDepthNormalsPass.hlsl"
             ENDHLSL
         }
 
@@ -457,7 +461,7 @@ Shader "UniToon/URP_2021_2/Lit"
             #pragma fragment ShadowPassFragment
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "../ShadowCasterPass.hlsl"
             ENDHLSL
         }
 
@@ -487,10 +491,12 @@ Shader "UniToon/URP_2021_2/Lit"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
+            #include "../DepthOnlyPass.hlsl"
             ENDHLSL
         }
 
@@ -519,6 +525,8 @@ Shader "UniToon/URP_2021_2/Lit"
             #pragma shader_feature_local _PARALLAXMAP
             #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
             #pragma shader_feature_local_fragment _ALPHATEST_ON
+            #pragma shader_feature_local_fragment _ALPHABLEND_ON
+            #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 
             //--------------------------------------
@@ -526,7 +534,7 @@ Shader "UniToon/URP_2021_2/Lit"
             #pragma multi_compile_instancing
 
             #include "./LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitDepthNormalsPass.hlsl"
+            #include "../LitDepthNormalsPass.hlsl"
             ENDHLSL
         }
 
