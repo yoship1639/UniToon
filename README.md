@@ -33,6 +33,10 @@ The following shader passes are also supported for situations where these are re
 * DepthNormals
 * Meta
 
+Several rendering modes are also supported
+* Forward
+* Deferred
+
 ## Install
 
 * Unity Package Manager (UPM)
