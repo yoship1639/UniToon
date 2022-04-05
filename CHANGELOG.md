@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.18.2] - 2022-04-05
+- Added renderer feature for when outlines do not work during deferred rendering.
+
 ## [0.18.1] - 2022-04-04
 - Fixed AlphaCutoff in DepthOnlyPass for transparent materials to work.
 - Fixed AlphaCutoff in DepthNormalsPass for transparent materials to work.

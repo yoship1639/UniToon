@@ -222,11 +222,11 @@ Shader "UniToon/URP_2020_2/Lit"
             ENDHLSL
         }
 
-        // This pass is used when drawing to a _CameraNormalsTexture texture
+        // This pass is used when drawing to a _CameraNormalsTexture texture with the forward renderer or the depthNormal prepass with the deferred renderer.
         Pass
         {
-            Name "DepthNormals"
-            Tags{"LightMode" = "DepthNormals"}
+            Name "DepthNormalsOnly"
+            Tags{"LightMode" = "DepthNormalsOnly"}
 
             ZWrite On
             Cull[_Cull]
@@ -241,10 +241,16 @@ Shader "UniToon/URP_2020_2/Lit"
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature_local _NORMALMAP
+            #pragma shader_feature_local _PARALLAXMAP
+            #pragma shader_feature_local _ _DETAIL_MULX2 _DETAIL_SCALED
             #pragma shader_feature_local_fragment _ALPHATEST_ON
             #pragma shader_feature_local_fragment _ALPHABLEND_ON
             #pragma shader_feature_local_fragment _ALPHAPREMULTIPLY_ON
             #pragma shader_feature_local_fragment _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+
+            // -------------------------------------
+            // Unity defined keywords
+            #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT // forward-only variant
 
             //--------------------------------------
             // GPU Instancing
@@ -252,7 +258,7 @@ Shader "UniToon/URP_2020_2/Lit"
             #pragma multi_compile _ DOTS_INSTANCING_ON
 
             #include "../URP_2021_1/LitInput.hlsl"
-            #include "../DepthNormalsPass.hlsl"
+            #include "../LitDepthNormalsPass.hlsl"
             ENDHLSL
         }
 
