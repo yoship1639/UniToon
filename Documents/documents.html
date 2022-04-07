@@ -56,13 +56,9 @@
                 <ul class="menu-list">
                   <li><a href="../index.html">Home</a></li>
                   <li><a href="./guidance.html">設定ガイダンス</a></li>
-                  <li><a href="./documents.html">ドキュメント</a></li>
+                  <li><a href="./documents.html"><b>ドキュメント</b></a></li>
                   <li><a href="./changelog.html">変更履歴</a></li>
                 </ul>
-                <p></p>
-                <p class="menu-label">
-                  目次
-                </p>
                 <ul class="menu-list">
                 </ul>
             </div>
@@ -70,9 +66,452 @@
   
           <div class="column is-9 container content">
             <h1>ドキュメント</h1>
-            <p>
-              TODO
-            </p>
+            <h2>マテリアルプロパティ</h3>
+            <table class="table is-striped">
+              <thead class="sticky-header has-background-primary-light">
+                <tr>
+                  <th class="has-text-centered" style="width: 15%;">セクション</th>
+                  <th class="has-text-centered" style="width: 20%;">名前</th>
+                  <th class="has-text-centered" style="width: 45%;">説明</th>
+                  <th class="has-text-centered" style="width: 20%;">プロパティ名</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Version</th>
+                  <td class="is-vcentered">
+                    <p>どのバージョンのUniToonを使うかを指定できます。自身のUnityバージョンに合ったUniToonバージョンを選択して使用してください。</p>
+                  </td>
+                  <td class="is-vcentered">_UniToonVer</td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Workflow</th>
+                  <th class="is-vcentered">Mode</th>
+                  <td class="is-vcentered">
+                    <p>どの反射ワークフローを使うか指定します。</p>
+                    <p><b>Specular</b>: スペキュラカラーを用いて反射を表現します。</p>
+                    <p><b>Metallic</b>: 金属パラメータを用いて反射を表現します。通常はこちらを使用します。</p>
+                  </td>
+                  <td class="is-vcentered">_WorkflowMode</td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Shader Type</th>
+                  <td class="is-vcentered">
+                    <p>シェーダの種類を指定します。</p>
+                    <p><b>Opaque</b>: 不透明。通常はこちらを使用します。</p>
+                    <p><b>Cutout</b>: カットアウト。切り抜き表現をする場合に使います。</p>
+                    <p><b>Fade</b>: フェード。フェードインやフェードアウトのような表示に適しています。</p>
+                    <p><b>Transparent</b>: 透過。プラスチックやガラスなどを表現する場合に使います。</p>
+                    <p><b>Fade With ZWrite</b>: フェード(Z書き込み)。Fadeに加えて深度バッファに値を書き込む場合に使います。</p>
+                    <p><b>Transparent With ZWrite</b>: 透過(Z書き込み)。Transparentに加えて深度バッファに値を書き込む場合に使います。</p>
+                  </td>
+                  <td class="is-vcentered">_Blend</td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Render Face</th>
+                  <td class="is-vcentered">
+                    <p>表示面を指定します。</p>
+                    <p><b>Face</b>: 表面のみ表示します。</p>
+                    <p><b>Back</b>: 裏面のみ表示します。</p>
+                    <p><b>Both</b>: 両面表示します。</p>
+                  </td>
+                  <td class="is-vcentered">_Cull</td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Receive Shadow</th>
+                  <td class="is-vcentered">
+                    <p>影の影響を受けるか指定します。</p>
+                  </td>
+                  <td class="is-vcentered">_ReceiveShadow</td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Base Color</th>
+                  <th class="is-vcentered">Base</th>
+                  <td class="is-vcentered">
+                    <p>ベースマップとベースカラーを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_BaseColor</p>
+                    <p>_BaseMap</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Shade</th>
+                  <td class="is-vcentered">
+                    <p>シェードマップとシェードカラーを指定します。影色を表します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_ShadeColor</p>
+                    <p>_ShadeMap</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Shade Hue</th>
+                  <td class="is-vcentered">
+                    <p>影色の色相を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_ShadeHue</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Shade Saturation</th>
+                  <td class="is-vcentered">
+                    <p>影色の彩度を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_ShadeSaturation</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Shade Brightness</th>
+                  <td class="is-vcentered">
+                    <p>影色の輝度を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_ShadeBrightness</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Emission</th>
+                  <td class="is-vcentered">
+                    <p>発光色を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_EmissionColor</p>
+                    <p>_EmissionMap</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Tiling, Offset</th>
+                  <td class="is-vcentered">
+                    <p>UVスケール・オフセットを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_BaseMap_ST</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Shading</th>
+                  <th class="is-vcentered">Toony Factor</th>
+                  <td class="is-vcentered">
+                    <p>陰影の境界の滑らかさを指定します。0に近いほどトゥーン表現になります。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_ToonyFactor</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Spherical Normal Correct</th>
+                  <td class="is-vcentered">
+                    <p>球面法線補正の割合を指定します。主に顔の陰影をアニメ調にしたい場合に使用します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_NormalCorrect</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Spherical Normal Correct Origin</th>
+                  <td class="is-vcentered">
+                    <p>球面法線補正のオブジェクト座標の中心点を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_NormalCorrectOrigin</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Physical Property</th>
+                  <th class="is-vcentered">Metallic</th>
+                  <td class="is-vcentered">
+                    <p>メタリックマップ、メタリックを指定します。金属感を出す場合のみ0以上にします。（ModeをMetallicにしている場合のみ）</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_Metallic</p>
+                    <p>_MetallicGlossMap</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Specular</th>
+                  <td class="is-vcentered">
+                    <p>スペキュラマップ、スペキュラカラーを指定します。（ModeをSpecularにしている場合のみ）</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_SpecColor</p>
+                    <p>_SpecGlossMap</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Smoothness</th>
+                  <td class="is-vcentered">
+                    <p>表面の滑らかさを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_Smoothness</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Smoothness Channel</th>
+                  <td class="is-vcentered">
+                    <p>Smoothnessをどのマップのチャンネルから参照するか指定します。</p>
+                    <p><b>SpecularMetallicAlpha</b>: スペキュラマップもしくはメタリックマップのαチャンネルをSmoothnessとして使用します。</p>
+                    <p><b>AlbedoAlpha</b>: ベースマップのαチャンネルをSmoothnessとして使用します。</p>
+                    <p></p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_SmoothnessTextureChannel</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Surface</th>
+                  <th class="is-vcentered">Normal</th>
+                  <td class="is-vcentered">
+                    <p>法線マップ、法線補正の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_BumpMap</p>
+                    <p>_BumpScale</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Height</th>
+                  <td class="is-vcentered">
+                    <p>高さマップ、高さ補正の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_ParallaxMap</p>
+                    <p>_Parallax</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Occlusion</th>
+                  <td class="is-vcentered">
+                    <p>オクルージョンマップ、オクルージョン補正の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OcclusionMap</p>
+                    <p>_OcclusionStrength</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Detail</th>
+                  <th class="is-vcentered">Detail Mask</th>
+                  <td class="is-vcentered">
+                    <p>詳細マップの影響範囲を絞るマスクを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_DetailMask</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Detail Albedo</th>
+                  <td class="is-vcentered">
+                    <p>詳細アルベドマップと詳細アルベドの強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_DetailAlbedoMap</p>
+                    <p>_DetailAlbedoMapScale</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Detail Normal</th>
+                  <td class="is-vcentered">
+                    <p>詳細法線マップと詳細法線補正の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_DetailNormalMap</p>
+                    <p>_DetailNormalMapScale</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Outline</th>
+                  <th class="is-vcentered">Outline Mask</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの太さの影響度を示すマスクを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineMask</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Outline Saturation</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの彩度を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineSaturation</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Outline Brightness</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの輝度を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineBrightness</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Outline Light Affects</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの光の影響度を指定します。</p>
+                    <p>1の場合、光方向に向かって太さは半分になり、明るさが高くなります。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineLightAffects</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Outline Width</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの太さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineWidth</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Outline Strength</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineStrength</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Outline Smoothness</th>
+                  <td class="is-vcentered">
+                    <p>アウトラインの柔らかさを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_OutlineSmoothness</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Post-Processing</th>
+                  <th class="is-vcentered">Diffuse Intensity</th>
+                  <td class="is-vcentered">
+                    <p>最終出力のディフューズ色の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_PostDiffuseIntensity</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Specular Intensity</th>
+                  <td class="is-vcentered">
+                    <p>最終出力のスペキュラ色の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_PostSpecularIntensity</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">GI Intensity</th>
+                  <td class="is-vcentered">
+                    <p>グローバルイルミネーションの影響度の強さを指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_PostGIIntensity</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Min Brightness</th>
+                  <td class="is-vcentered">
+                    <p>最終出力色の最小輝度を指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_PostMinBrightness</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">MainLight Hi-Cut Intensity</th>
+                  <td class="is-vcentered">
+                    <p>指定した強さ以上の直接光の強さを受けないようにフィルタを掛けます。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_MainLightHiCut</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Additional Hi-Cut Intensity</th>
+                  <td class="is-vcentered">
+                    <p>指定した強さ以上の追加光の強さを受けないようにフィルタを掛けます。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_AdditionalLightHiCut</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered">Advanced</th>
+                  <th class="is-vcentered">Render Queue</th>
+                  <td class="is-vcentered">
+                    <p>レンダーキューを直接指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Specular Highlights</th>
+                  <td class="is-vcentered">
+                    <p>スペキュラ反射をするか指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_SpecularHighlights</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Environment Reflections</th>
+                  <td class="is-vcentered">
+                    <p>環境反射を受けるか指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                    <p>_EnvironmentReflections</p>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="is-vcentered"></th>
+                  <th class="is-vcentered">Enable GPU Instancing</th>
+                  <td class="is-vcentered">
+                    <p>GPUインスタンシングを有効にするか指定します。</p>
+                  </td>
+                  <td class="is-vcentered">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
   
         </div>
