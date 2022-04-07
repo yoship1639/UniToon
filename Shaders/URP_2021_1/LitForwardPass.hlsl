@@ -51,7 +51,7 @@ struct Varyings
 #endif
 
     float4 screenPos                : TEXCOORD9;
-    float3 originWS                 : TEXCOORD10;
+    float3 normalCorrectWS          : TEXCOORD10;
 
     float4 positionCS               : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -150,7 +150,12 @@ Varyings LitPassVertex(Attributes input)
 
     output.positionCS = vertexInput.positionCS;
     output.screenPos = output.positionCS;
-    output.originWS = TransformObjectToWorld(_NormalCorrectOrigin);
+
+    float3 normalCorrectOS = (input.positionOS.xyz - _NormalCorrectOrigin);
+    float3 normalCorrectDir = normalCorrectOS;
+    normalCorrectDir.y = 0.0;
+    normalCorrectDir = SafeNormalize(normalCorrectDir);
+    output.normalCorrectWS = TransformObjectToWorldNormal(normalCorrectDir);
 
     return output;
 }
@@ -181,10 +186,7 @@ half4 LitPassFragment(Varyings input) : SV_Target
     half ramp;
 
     // normal correct
-    half3 normalCorrectWS = (input.positionWS - input.originWS);
-    normalCorrectWS.y = 0.0;
-    normalCorrectWS = normalize(normalCorrectWS);
-    inputData.normalWS = normalize(lerp(inputData.normalWS, normalCorrectWS, _NormalCorrect));
+    inputData.normalWS = normalize(lerp(inputData.normalWS, input.normalCorrectWS, _NormalCorrect));
 
     half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, ramp);
 

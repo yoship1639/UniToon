@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.18.3] - 2022-04-08
+- Lightweighted logic for normal correction.
+
 ## [0.18.2] - 2022-04-05
 - Added renderer feature for when outlines do not work during deferred rendering.
 
