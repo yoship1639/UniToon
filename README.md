@@ -1,6 +1,6 @@
 # UniToon
 
-ver 0.18.3-alpha
+ver 0.19.0-alpha
 
 Physically-based Toon Shader for game applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.
 

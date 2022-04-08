@@ -61,6 +61,7 @@ struct Varyings
 
     float4 screenPos                : TEXCOORD10;
     float3 normalCorrectWS          : TEXCOORD11;
+    float3 shadowCorrectWS          : TEXCOORD12;
 
     float4 positionCS               : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -95,7 +96,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     inputData.shadowCoord = input.shadowCoord;
 #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-    inputData.shadowCoord = TransformWorldToShadowCoord(inputData.positionWS);
+    inputData.shadowCoord = TransformWorldToShadowCoord(input.shadowCorrectWS);
 #else
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
@@ -184,7 +185,20 @@ Varyings LitPassVertex(Attributes input)
 #endif
 
 #if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    output.shadowCoord = GetShadowCoord(vertexInput);
+
+    float3 shadowCorrectDir = (input.positionOS.xyz - _ShadowCorrectOrigin);
+    shadowCorrectDir = SafeNormalize(shadowCorrectDir);
+    float3 shadowCorrectOS = _ShadowCorrectOrigin + shadowCorrectDir * _ShadowCorrectRadius;
+    VertexPositionInputs shadowVertexInput = GetVertexPositionInputs(lerp(input.positionOS.xyz, shadowCorrectOS, _ShadowCorrect));
+    output.shadowCoord = GetShadowCoord(shadowVertexInput);
+
+#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+
+    float3 shadowCorrectDir = (input.positionOS.xyz - _ShadowCorrectOrigin);
+    shadowCorrectDir = SafeNormalize(shadowCorrectDir);
+    float3 shadowCorrectOS = _ShadowCorrectOrigin + shadowCorrectDir * _ShadowCorrectRadius;
+    output.shadowCorrectWS = TransformObjectToWorld(lerp(input.positionOS.xyz, shadowCorrectOS, _ShadowCorrect));
+
 #endif
 
     output.positionCS = vertexInput.positionCS;

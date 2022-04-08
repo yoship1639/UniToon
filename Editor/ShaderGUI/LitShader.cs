@@ -12,6 +12,7 @@ namespace UniToon
         SavedBool fo_workflow;
         SavedBool fo_baseColor;
         SavedBool fo_shading;
+        SavedBool fo_shadowCorrection;
         SavedBool fo_physicalProperty;
         SavedBool fo_surface;
         SavedBool fo_detail;
@@ -25,6 +26,7 @@ namespace UniToon
             fo_workflow = new SavedBool($"{prefix}.Workflow", true);
             fo_baseColor = new SavedBool($"{prefix}.BaseColor", true);
             fo_shading = new SavedBool($"{prefix}.Shading", true);
+            fo_shadowCorrection = new SavedBool($"{prefix}.ShadowCorrection", true);
             fo_physicalProperty = new SavedBool($"{prefix}.PhysicalProperty", true);
             fo_surface = new SavedBool($"{prefix}.Surface", true);
             fo_detail = new SavedBool($"{prefix}.Detail", true);
@@ -46,8 +48,15 @@ namespace UniToon
             var changed = false;
             var blendModeChanged = false;
 
+            if (EditorGUILayout.LinkButton("Documents"))
+            {
+                System.Diagnostics.Process.Start("https://yoship1639.github.io/UniToon/Documents/documents.html");
+            }
+
+            EditorGUILayout.Space();
+
             // version
-            GUILayout.Label("UniToon ver 0.18.3-alpha");
+            GUILayout.Label("UniToon ver 0.19.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -107,6 +116,15 @@ namespace UniToon
             }
             changed |= EndSection();
 
+            // shadow correction
+            if (BeginSection("Shadow Correction (Experimental)", fo_shadowCorrection))
+            {
+                changed |= MaterialGUI.Slider("Spherical Shadow Correct", FindProperty("_ShadowCorrect", properties), 0.0f, 1.0f);
+                changed |= MaterialGUI.Vector3("Spherical Shadow Correct Origin", FindProperty("_ShadowCorrectOrigin", properties));
+                changed |= MaterialGUI.Slider("Spherical Shadow Correct Radius", FindProperty("_ShadowCorrectRadius", properties), 0.0f, 2.0f);
+            }
+            changed |= EndSection();
+
             // physical property
             if (BeginSection("Physical Property", fo_physicalProperty))
             {
@@ -142,8 +160,8 @@ namespace UniToon
             }
             changed |= EndSection();
 
-            // outline (experimental)
-            if (BeginSection("Outline (Experimental)", fo_outline))
+            // outline
+            if (BeginSection("Outline", fo_outline))
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Outline Mask"), FindProperty("_OutlineMask", properties));
                 changed |= MaterialGUI.Slider("Outline Saturation", FindProperty("_OutlineSaturation", properties), 0.0f, 4.0f);
@@ -153,7 +171,7 @@ namespace UniToon
                 changed |= MaterialGUI.Slider("Outline Strength", FindProperty("_OutlineStrength", properties), 0.0f, 1.0f);
                 changed |= MaterialGUI.Slider("Outline Smoothness", FindProperty("_OutlineSmoothness", properties), 0.0f, 1.0f);
 
-                EditorGUILayout.HelpBox("Outline (Experimental) requires that the camera depth texture is enabled", MessageType.Info);
+                EditorGUILayout.HelpBox("Outline requires that the camera depth texture is enabled", MessageType.Info);
             }
             changed |= EndSection();
 

@@ -16,6 +16,9 @@ CBUFFER_START(UnityPerMaterial)
 half _ToonyFactor;
 half _NormalCorrect;
 half3 _NormalCorrectOrigin;
+half _ShadowCorrect;
+half3 _ShadowCorrectOrigin;
+half _ShadowCorrectRadius;
 float4 _ShadeMap_ST;
 half4 _ShadeColor;
 half _ShadeHue;
@@ -59,7 +62,10 @@ CBUFFER_END
 UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float,  _ToonyFactor)
     UNITY_DOTS_INSTANCED_PROP(float,  _NormalCorrect)
-    UNITY_DOTS_INSTANCED_PROP(float,  _NormalCorrectOrigin)
+    UNITY_DOTS_INSTANCED_PROP(float3,  _NormalCorrectOrigin)
+    UNITY_DOTS_INSTANCED_PROP(float,  _ShadowCorrect)
+    UNITY_DOTS_INSTANCED_PROP(float3, _ShadowCorrectOrigin)
+    UNITY_DOTS_INSTANCED_PROP(float,  _ShadowCorrectRadius)
     UNITY_DOTS_INSTANCED_PROP(float4, _ShadeColor)
     UNITY_DOTS_INSTANCED_PROP(float,  _ShadeHue)
     UNITY_DOTS_INSTANCED_PROP(float,  _ShadeSaturation)
@@ -92,13 +98,16 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _AdditionalLightHiCut)
 UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 
-#define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ToonyFactor)
-#define _NormalCorrect          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_NormalCorrect)
-#define _NormalCorrectOrigin    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_NormalCorrectOrigin)
+#define _ToonyFactor            UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ToonyFactor)
+#define _NormalCorrect          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_NormalCorrect)
+#define _NormalCorrectOrigin    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float3 , Metadata_NormalCorrectOrigin)
+#define _ShadowCorrect          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ShadowCorrect)
+#define _ShadowCorrectOrigin    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float3 , Metadata_ShadowCorrectOrigin)
+#define _ShadowCorrectRadius    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ShadowCorrectRadius)
 #define _ShadeColor             UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeColor)
-#define _ShadeHue               UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeHue)
-#define _ShadeSaturation        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeSaturation)
-#define _ShadeBrightness        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_ShadeBrightness)
+#define _ShadeHue               UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ShadeHue)
+#define _ShadeSaturation        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ShadeSaturation)
+#define _ShadeBrightness        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ShadeBrightness)
 #define _BaseColor              UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_BaseColor)
 #define _SpecColor              UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_SpecColor)
 #define _EmissionColor          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float4 , Metadata_EmissionColor)

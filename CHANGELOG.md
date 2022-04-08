@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.19.0] - 2022-04-08
+- Added experimental spherical shadow coordinate correction.
+
 ## [0.18.3] - 2022-04-08
 - Lightweighted logic for normal correction.
 
