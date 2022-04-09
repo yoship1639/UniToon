@@ -46,7 +46,6 @@ half _OutlineWidth;
 half _OutlineLightAffects;
 half _OutlineStrength;
 half _OutlineSmoothness;
-half _ReceiveShadow;
 half _PostDiffuseIntensity;
 half _PostSpecularIntensity;
 half _PostGIIntensity;
@@ -90,7 +89,6 @@ UNITY_DOTS_INSTANCING_START(MaterialPropertyMetadata)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineLightAffects)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineStrength)
     UNITY_DOTS_INSTANCED_PROP(float , _OutlineSmoothness)
-    UNITY_DOTS_INSTANCED_PROP(float , _ReceiveShadow)
     UNITY_DOTS_INSTANCED_PROP(float , _PostDiffuseIntensity)
     UNITY_DOTS_INSTANCED_PROP(float , _PostSpecularIntensity)
     UNITY_DOTS_INSTANCED_PROP(float , _PostGIIntensity)
@@ -129,7 +127,6 @@ UNITY_DOTS_INSTANCING_END(MaterialPropertyMetadata)
 #define _OutlineLightAffects    UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineLightAffects)
 #define _OutlineStrength        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineStrength)
 #define _OutlineSmoothness      UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_OutlineSmoothness)
-#define _ReceiveShadow          UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_ReceiveShadow)
 #define _PostDiffuseIntensity   UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostDiffuseIntensity)
 #define _PostSpecularIntensity  UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostSpecularIntensity)
 #define _PostGIIntensity        UNITY_ACCESS_DOTS_INSTANCED_PROP_FROM_MACRO(float  , Metadata_PostGIIntensity)

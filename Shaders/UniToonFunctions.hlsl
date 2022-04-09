@@ -1,6 +1,10 @@
 #ifndef UNITOON_FUNCTIONS_INCLUDED
 #define UNITOON_FUNCTIONS_INCLUDED
 
+#if !defined(INV_PI)
+#define INV_PI 0.318309
+#endif
+
 inline half invlerp(const half start, const half end, const half t)
 {
     return (t - start) / (end - start);

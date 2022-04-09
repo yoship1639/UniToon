@@ -1,6 +1,6 @@
 # UniToon
 
-ver 0.19.0-alpha
+ver 0.20.0-alpha
 
 Physically-based Toon Shader for game applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.
 
@@ -58,7 +58,7 @@ Unity Version
 |  Version      | Support           |
 | ------------- | ------------      |
 |  Unity2019.x  | Not yet           |
-|  Unity2020.1  | Not yet           |
+|  Unity2020.1  | Yes               |
 |  Unity2020.2  | Yes               |
 |  Unity2020.3  | Yes               |
 |  Unity2021.1  | Yes               |

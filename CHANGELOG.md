@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.20.0] - 2022-04-09
+- Supports URP 2020.2.
+
 ## [0.19.0] - 2022-04-08
 - Added experimental spherical shadow coordinate correction.
 

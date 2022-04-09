@@ -3,63 +3,7 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "../UniToonFunctions.hlsl"
-
-#if !defined(INV_PI)
-#define INV_PI 0.318309
-#endif
-
-void UniToonLightingPhysicallyBased(BRDFData brdfData,
-    half3 lightColor, half3 lightDirectionWS, half distanceAttenuation, half shadowAttenuation,
-    half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff,
-    half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec, out half3 bright)
-{
-    half NdotL = saturate(dot(normalWS, lightDirectionWS));
-    half lightAttenuation = distanceAttenuation * shadowAttenuation;
-    ramp = 1.0 - NdotL;
-    ramp = pow(ramp, 1 / toonyFactor);
-    ramp = 1.0 - ramp;
-    bright = lightColor * lightAttenuation * ramp;
-    ramp *= shadowAttenuation;
-    color = lightColor * lightAttenuation * brdfData.diffuse;
-    spec = 0;
-
-#ifndef _SPECULARHIGHLIGHTS_OFF
-    [branch] if (!specularHighlightsOff)
-    {
-        half3 radiance = lightColor * (lightAttenuation * NdotL);
-        spec = brdfData.specular * DirectBRDFSpecular(brdfData, normalWS, lightDirectionWS, viewDirectionWS) * radiance;
-        bright += spec;
-    }
-#endif // _SPECULARHIGHLIGHTS_OFF
-}
-
-void UniToonLightingPhysicallyBased(BRDFData brdfData, Light light, half3 normalWS, half3 viewDirectionWS, bool specularHighlightsOff, half3 shadeColor, half toonyFactor, out half3 color, out half ramp, out half3 spec, out half3 bright)
-{
-    UniToonLightingPhysicallyBased(brdfData, light.color, light.direction, light.distanceAttenuation, light.shadowAttenuation, normalWS, viewDirectionWS, specularHighlightsOff, shadeColor, toonyFactor, color, ramp, spec, bright);
-}
-
-half3 UniToonLightingLambert(half3 lightColor, half3 lightDir, half3 normal)
-{
-    half NdotL = saturate(dot(normal, lightDir));
-    return lightColor * NdotL;
-}
-
-half3 UniToonCalculateBlinnPhong(Light light, InputData inputData, SurfaceData surfaceData)
-{
-    half3 attenuatedLightColor = light.color * (light.distanceAttenuation * light.shadowAttenuation);
-    half3 lightColor = UniToonLightingLambert(attenuatedLightColor, light.direction, inputData.normalWS);
-
-    lightColor *= surfaceData.albedo;
-
-    #if defined(_SPECGLOSSMAP) || defined(_SPECULAR_COLOR)
-    half smoothness = exp2(10 * surfaceData.smoothness + 1);
-
-    lightColor += LightingSpecular(attenuatedLightColor, light.direction, inputData.normalWS, inputData.viewDirectionWS, half4(surfaceData.specular, 1), smoothness);
-    #endif
-
-    return lightColor;
-}
-
+#include "../UniToonLighting.hlsl"
 
 half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 shadeColor, half toonyFactor, out half totalRamp)
 {
@@ -166,63 +110,6 @@ half4 UniToonFragmentPBR(InputData inputData, SurfaceData surfaceData, half3 sha
 
     #if defined(_ADDITIONAL_LIGHTS_VERTEX)
     lightingData.vertexLightingColor += inputData.vertexLighting * brdfData.diffuse;
-    #endif
-
-    return CalculateFinalColor(lightingData, surfaceData.alpha);
-}
-
-// TODO: UniToon SimpleLit
-half4 UniToonFragmentBlinnPhong(InputData inputData, SurfaceData surfaceData, half3 shadeColor, half toonyFactor)
-{
-    #if defined(DEBUG_DISPLAY)
-    half4 debugColor;
-
-    if (CanDebugOverrideOutputColor(inputData, surfaceData, debugColor))
-    {
-        return debugColor;
-    }
-    #endif
-
-    uint meshRenderingLayers = GetMeshRenderingLightLayer();
-    half4 shadowMask = CalculateShadowMask(inputData);
-    AmbientOcclusionFactor aoFactor = CreateAmbientOcclusionFactor(inputData, surfaceData);
-    Light mainLight = GetMainLight(inputData, shadowMask, aoFactor);
-
-    MixRealtimeAndBakedGI(mainLight, inputData.normalWS, inputData.bakedGI, aoFactor);
-
-    inputData.bakedGI *= surfaceData.albedo;
-
-    LightingData lightingData = CreateLightingData(inputData, surfaceData);
-    if (IsMatchingLightLayer(mainLight.layerMask, meshRenderingLayers))
-    {
-        lightingData.mainLightColor += UniToonCalculateBlinnPhong(mainLight, inputData, surfaceData);
-    }
-
-    #if defined(_ADDITIONAL_LIGHTS)
-    uint pixelLightCount = GetAdditionalLightsCount();
-
-    #if USE_CLUSTERED_LIGHTING
-    for (uint lightIndex = 0; lightIndex < min(_AdditionalLightsDirectionalCount, MAX_VISIBLE_LIGHTS); lightIndex++)
-    {
-        Light light = GetAdditionalLight(lightIndex, inputData, shadowMask, aoFactor);
-        if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
-        {
-            lightingData.additionalLightsColor += UniToonCalculateBlinnPhong(light, inputData, surfaceData);
-        }
-    }
-    #endif
-
-    LIGHT_LOOP_BEGIN(pixelLightCount)
-        Light light = GetAdditionalLight(lightIndex, inputData, shadowMask, aoFactor);
-        if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
-        {
-            lightingData.additionalLightsColor += UniToonCalculateBlinnPhong(light, inputData, surfaceData);
-        }
-    LIGHT_LOOP_END
-    #endif
-
-    #if defined(_ADDITIONAL_LIGHTS_VERTEX)
-    lightingData.vertexLightingColor += inputData.vertexLighting;
     #endif
 
     return CalculateFinalColor(lightingData, surfaceData.alpha);

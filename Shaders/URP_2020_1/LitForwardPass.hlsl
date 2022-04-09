@@ -1,19 +1,8 @@
-#ifndef UNITOON_2021_1_FORWARD_LIT_PASS_INCLUDED
-#define UNITOON_2021_1_FORWARD_LIT_PASS_INCLUDED
+#ifndef UNITOON_2020_1_FORWARD_LIT_PASS_INCLUDED
+#define UNITOON_2020_1_FORWARD_LIT_PASS_INCLUDED
 
 #include "./Lighting.hlsl"
 #include "../UniToonFunctions.hlsl"
-
-// GLES2 has limited amount of interpolators
-#if defined(_PARALLAXMAP) && !defined(SHADER_API_GLES)
-#define REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR
-#endif
-
-#if (defined(_NORMALMAP) || (defined(_PARALLAXMAP) && !defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR))) || defined(_DETAIL)
-#define REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR
-#endif
-
-// keep this file in sync with LitGBufferPass.hlsl
 
 struct Attributes
 {
@@ -35,7 +24,7 @@ struct Varyings
 #endif
 
     float3 normalWS                 : TEXCOORD3;
-#if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
+#ifdef _NORMALMAP
     float4 tangentWS                : TEXCOORD4;    // xyz: tangent, w: sign
 #endif
     float3 viewDirWS                : TEXCOORD5;
@@ -46,13 +35,9 @@ struct Varyings
     float4 shadowCoord              : TEXCOORD7;
 #endif
 
-#if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    float3 viewDirTS                : TEXCOORD8;
-#endif
-
-    float4 screenPos                : TEXCOORD9;
-    float3 normalCorrectWS          : TEXCOORD10;
-    float3 shadowCorrectWS          : TEXCOORD11;
+    float4 screenPos                : TEXCOORD8;
+    float3 normalCorrectWS          : TEXCOORD9;
+    float3 shadowCorrectWS          : TEXCOORD10;
 
     float4 positionCS               : SV_POSITION;
     UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -68,7 +53,7 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
 #endif
 
     half3 viewDirWS = SafeNormalize(input.viewDirWS);
-#if defined(_NORMALMAP) || defined(_DETAIL)
+#ifdef _NORMALMAP 
     float sgn = input.tangentWS.w;      // should be either +1 or -1
     float3 bitangent = sgn * cross(input.normalWS.xyz, input.tangentWS.xyz);
     inputData.normalWS = TransformTangentToWorld(normalTS, half3x3(input.tangentWS.xyz, bitangent.xyz, input.normalWS.xyz));
@@ -90,8 +75,6 @@ void InitializeInputData(Varyings input, half3 normalTS, out InputData inputData
     inputData.fogCoord = input.fogFactorAndVertexLight.x;
     inputData.vertexLighting = input.fogFactorAndVertexLight.yzw;
     inputData.bakedGI = SAMPLE_GI(input.lightmapUV, input.vertexSH, inputData.normalWS);
-    inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
-    inputData.shadowMask = SAMPLE_SHADOWMASK(input.lightmapUV);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,13 +91,12 @@ Varyings LitPassVertex(Attributes input)
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
     VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-
+    
     // normalWS and tangentWS already normalize.
     // this is required to avoid skewing the direction during interpolation
     // also required for per-vertex lighting and SH evaluation
     VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS, input.tangentOS);
-
-    half3 viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+    float3 viewDirWS = GetCameraPositionWS() - vertexInput.positionWS;
     half3 vertexLight = VertexLighting(vertexInput.positionWS, normalInput.normalWS);
     half fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
@@ -123,17 +105,9 @@ Varyings LitPassVertex(Attributes input)
     // already normalized from normal transform to WS.
     output.normalWS = normalInput.normalWS;
     output.viewDirWS = viewDirWS;
-#if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR) || defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
+#ifdef _NORMALMAP
     real sign = input.tangentOS.w * GetOddNegativeScale();
-    half4 tangentWS = half4(normalInput.tangentWS.xyz, sign);
-#endif
-#if defined(REQUIRES_WORLD_SPACE_TANGENT_INTERPOLATOR)
-    output.tangentWS = tangentWS;
-#endif
-
-#if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    half3 viewDirTS = GetViewDirectionTangentSpace(tangentWS, output.normalWS, viewDirWS);
-    output.viewDirTS = viewDirTS;
+    output.tangentWS = half4(normalInput.tangentWS.xyz, sign);
 #endif
 
     OUTPUT_LIGHTMAP_UV(input.lightmapUV, unity_LightmapST, output.lightmapUV);
@@ -180,15 +154,6 @@ half4 LitPassFragment(Varyings input) : SV_Target
     UNITY_SETUP_INSTANCE_ID(input);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-#if defined(_PARALLAXMAP)
-#if defined(REQUIRES_TANGENT_SPACE_VIEW_DIR_INTERPOLATOR)
-    half3 viewDirTS = input.viewDirTS;
-#else
-    half3 viewDirTS = GetViewDirectionTangentSpace(input.tangentWS, input.normalWS, input.viewDirWS);
-#endif
-    ApplyPerPixelDisplacement(viewDirTS, input.uv);
-#endif
-
     SurfaceData surfaceData;
     InitializeStandardLitSurfaceData(input.uv, surfaceData);
 
@@ -202,8 +167,8 @@ half4 LitPassFragment(Varyings input) : SV_Target
     // normal correct
     inputData.normalWS = normalize(lerp(inputData.normalWS, input.normalCorrectWS, _NormalCorrect));
 
-    half4 color = UniToonFragmentPBR(inputData, surfaceData, shadeColor, _ToonyFactor, ramp);
-
+    half4 color = UniToonFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha, shadeColor, _ToonyFactor, ramp);
+    
     // Outline
 #if !(defined(_ALPHAPREMULTIPLY_ON) || defined(_ALPHABLEND_ON))
     if (_OutlineWidth > 0.0 && _OutlineStrength > 0.0)

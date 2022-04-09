@@ -12,6 +12,7 @@ namespace UniToon
         URP_2021_1 = 1211,
         URP_2020_3 = 1203,
         URP_2020_2 = 1202,
+        URP_2020_1 = 1201,
     }
 
     public enum WorkflowMode
@@ -55,9 +56,16 @@ namespace UniToon
             return UniToonVersion.URP_2020_3;
 #elif UNITY_2020_2
             return UniToonVersion.URP_2020_2;
+#elif UNITY_2020_1
+            return UniToonVersion.URP_2020_1;
 #else
             return UniToonVersion.Unknown;
 #endif
+        }
+
+        private static Texture GetTexture(Material mat, string propertyName)
+        {
+            return mat.HasProperty(propertyName) ? mat.GetTexture(propertyName) : null;
         }
 
         public static void MaterialChanged(Material mat, UniToonVersion version, bool updateRenderQueue = false)
@@ -66,27 +74,27 @@ namespace UniToon
             mat.shaderKeywords = new string[0];
 
             // normal map
-            SetKeyword(mat, "_NORMALMAP", mat.GetTexture("_BumpMap") || mat.GetTexture("_DetailNormalMap"));
+            SetKeyword(mat, "_NORMALMAP", GetTexture(mat, "_BumpMap") || GetTexture(mat, "_DetailNormalMap"));
 
             // workflow mode
             if ((WorkflowMode)mat.GetFloat("_WorkflowMode") == WorkflowMode.Specular)
             {
-                SetKeyword(mat, "_METALLICSPECGLOSSMAP", mat.GetTexture("_SpecGlossMap"));
+                SetKeyword(mat, "_METALLICSPECGLOSSMAP", GetTexture(mat, "_SpecGlossMap"));
                 SetKeyword(mat, "_SPECULAR_SETUP", true);
             }
             else
             {
-                SetKeyword(mat, "_METALLICSPECGLOSSMAP", mat.GetTexture("_MetallicGlossMap"));
+                SetKeyword(mat, "_METALLICSPECGLOSSMAP", GetTexture(mat, "_MetallicGlossMap"));
             }
             
             // parallax map
-            SetKeyword(mat, "_PARALLAXMAP", mat.GetTexture("_ParallaxMap"));
+            SetKeyword(mat, "_PARALLAXMAP", GetTexture(mat, "_ParallaxMap"));
 
             // occlusion map
-            SetKeyword(mat, "_OCCLUSIONMAP", mat.GetTexture("_OcclusionMap"));
+            SetKeyword(mat, "_OCCLUSIONMAP", GetTexture(mat, "_OcclusionMap"));
 
             // detail map
-            SetKeyword(mat, "_DETAIL_MULX2", mat.GetTexture("_DetailAlbedoMap") || mat.GetTexture("_DetailNormalMap"));
+            SetKeyword(mat, "_DETAIL_MULX2", GetTexture(mat, "_DetailAlbedoMap") || GetTexture(mat, "_DetailNormalMap"));
 
             // emission
             SetEmissionKeyword(mat);

@@ -48,7 +48,7 @@ namespace UniToon
             var changed = false;
             var blendModeChanged = false;
 
-            if (EditorGUILayout.LinkButton("Documents"))
+            if (GUILayout.Button("Documents", GUILayout.Width(120)))
             {
                 System.Diagnostics.Process.Start("https://yoship1639.github.io/UniToon/Documents/documents.html");
             }
@@ -56,7 +56,7 @@ namespace UniToon
             EditorGUILayout.Space();
 
             // version
-            GUILayout.Label("UniToon ver 0.19.0-alpha");
+            GUILayout.Label("UniToon ver 0.20.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -146,11 +146,14 @@ namespace UniToon
             if (BeginSection("Surface", fo_surface))
             {
                 materialEditor.TexturePropertySingleLine(new GUIContent("Normal"), FindProperty("_BumpMap", properties), mat.GetTexture("_BumpMap") ? FindProperty("_BumpScale", properties) : null);
+#if UNITY_2020_2_OR_NEWER
                 materialEditor.TexturePropertySingleLine(new GUIContent("Height"), FindProperty("_ParallaxMap", properties), mat.GetTexture("_ParallaxMap") ? FindProperty("_Parallax", properties) : null);
+#endif
                 materialEditor.TexturePropertySingleLine(new GUIContent("Occlusion"), FindProperty("_OcclusionMap", properties), mat.GetTexture("_OcclusionMap") ? FindProperty("_OcclusionStrength", properties) : null);
             }
             changed |= EndSection();
 
+#if UNITY_2020_2_OR_NEWER
             // detail
             if (BeginSection("Detail", fo_detail))
             {
@@ -159,6 +162,7 @@ namespace UniToon
                 materialEditor.TexturePropertySingleLine(new GUIContent("Detail Normal"), FindProperty("_DetailNormalMap", properties), mat.GetTexture("_DetailNormalMap") ? FindProperty("_DetailNormalMapScale", properties) : null);
             }
             changed |= EndSection();
+#endif
 
             // outline
             if (BeginSection("Outline", fo_outline))

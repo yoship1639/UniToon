@@ -4,36 +4,39 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class DeferredOutlineRendererFeature : ScriptableRendererFeature
+#if UNITY_2021_2_OR_NEWER
+namespace UniToon
 {
-    class DeferredOutlineRenderPass : ScriptableRenderPass
+    public class DeferredOutlineRendererFeature : ScriptableRendererFeature
     {
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        class DeferredOutlineRenderPass : ScriptableRenderPass
         {
+            public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+            {
+            }
+
+            public bool Setup(ScriptableRenderer renderer)
+            {
+                ConfigureInput(ScriptableRenderPassInput.Normal);
+                return true;
+            }
         }
 
-        public bool Setup(ScriptableRenderer renderer)
+        DeferredOutlineRenderPass m_ScriptablePass;
+
+        public override void Create()
         {
-            ConfigureInput(ScriptableRenderPassInput.Normal);
-            return true;
+            m_ScriptablePass = new DeferredOutlineRenderPass();
+            m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRenderingGbuffer;
         }
-    }
 
-    DeferredOutlineRenderPass m_ScriptablePass;
-
-    public override void Create()
-    {
-        m_ScriptablePass = new DeferredOutlineRenderPass();
-        m_ScriptablePass.renderPassEvent = RenderPassEvent.AfterRenderingGbuffer;
-    }
-
-    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
-    {
-        if (m_ScriptablePass.Setup(renderer))
+        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
-            renderer.EnqueuePass(m_ScriptablePass);
+            if (m_ScriptablePass.Setup(renderer))
+            {
+                renderer.EnqueuePass(m_ScriptablePass);
+            }
         }
     }
 }
-
-
+#endif
