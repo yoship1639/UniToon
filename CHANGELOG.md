@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.21.0] - 2022-04-09
+- Supports URP 2019.4.
+- Supports URP 2019.3.
+
 ## [0.20.0] - 2022-04-09
 - Supports URP 2020.1.
 
