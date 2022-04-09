@@ -59,14 +59,99 @@
                   <li><a href="./documents.html">ドキュメント</a></li>
                   <li><a href="./changelog.html">変更履歴</a></li>
                 </ul>
+                <p class="menu-label pt-4">
+                  目次
+                </p>
+                <ul class="menu-list">
+                  <li><a href="#top">トゥーン調キャラクタモデルの調整方法</a></li>
+                  <li><a href="#shading">顔の陰影を調整する</a></li>
+                  <li><a href="#shadow">顔のセルフシャドーを調整する</a></li>
+                  <li><a href="#property">物理特性を調整する</a></li>
+                  <li><a href="#tips">Tips</a></li>
+                </ul>
             </div>
           </div>
   
           <div class="column is-9 container content">
             <h1>設定ガイダンス</h1>
-            <p>
-              TODO
-            </p>
+
+            <h2 id="top">トゥーン調キャラクタモデルの調整方法</h2>
+            <p>以下のモデルを例にUniToonシェーダを使った調整方法を解説します。</p>
+            <figure class="image">
+              <img src="https://www.moguravr.com/wp-content/uploads/2021/06/202106281856843000.jpg">
+            </figure>
+            <p>VRMモデルをUnityにインポートするとモデルのマテリアルはすべてVRM/MToonシェーダとなるので、マテリアルをすべて選択し以下のメニューからUniToonシェーダに変換します。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162564692-79b50971-faa4-4bc4-a8ea-b55a79135455.png">
+            </figure>
+            <p>シーンに配置し調整していきます。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162564817-ddf1a4e2-7444-41d6-b0da-4997ce6c27e9.png">
+            </figure>
+            <p>全体的に色が淡いので、全てのマテリアルのShade Saturationを調整し陰影の彩度を高めます。</p>
+            <p>また、肌の色が白いので、肌に関するマテリアルのBase Colorを少しだけ調整します。</p>
+            <p>Shade Saturation = 2.5</p>
+            <p>Shade Brightness = 0.8</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162564939-88712872-ff87-4877-b339-01769911002e.png">
+            </figure>
+            <p>色味はこんな感じになりました。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162565145-08efd609-8c3d-4ca8-a655-1313cf6d1a3b.png">
+            </figure>
+
+            <h2 id="shading">顔の陰影を調整する</h2>
+            <p>通常のシェーダだとReceiveShadowを切ってセルフシャドーが入らないようにし、Unlitにすることで陰影も切り顔に変な陰影が出来ないようにしますが、UniToonはシャドーと陰影両方を調整する事で理想的な状態に近づける事が出来ます。</p>
+            <p>顔の陰影を良い感じにするために、球面法線補正を動的に行います。そのためには、顔の中心の座標を知る必要があります。</p>
+            <p>モデルのルートからの相対的な顔の中心点を知りたいので、モデルのルートに「CenterPos」というGameObjectを置きます。後で削除するので名前は適当でいいです。（※モデルによってはルートがHipsである場合がありますのでご注意ください）</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162566116-a9a383d1-d17c-4962-b69d-ff125dd29884.png">
+            </figure>
+            <p>以下の位置にCenterPosが来るようにします。おすすめは、高さYは鼻の位置辺り、奥行きZは首の中心辺りです。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162566391-8d7bd4ce-9813-4165-99e0-0b06cefaa1d4.png">
+            </figure>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162566396-6eb8cd33-58db-4a24-be32-c05c7278c9cb.png">
+            </figure>
+            <p>今回のモデルの場合、Y=1.37, Z=-0.025が顔の中心点となります。これを、顔に関係する全てのマテリアルの「Spherical Normal Correct Origin」にセットします。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162566585-9b702891-b86a-42e4-966c-8fefe5edde10.png">
+            </figure>
+            <p>そして「Spherical Normal Correct」を1に近づけると、顔の法線を自動的に補正出来ます。</p>
+            <p>完全に球面化してしまうと逆に変に見える可能性があるので、<b>0.9位にする事をお勧めします。</b></p>
+            <p>補正すると、顔の陰影が改善されます。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162566857-fe08b37f-2b9b-40a4-8967-1ba9ea07552e.png">
+            </figure>
+            <p>陰影は改善されますが、セルフシャドーはまだ改善されていないので、次はセルフシャドーを改善します。</p>
+
+            <h2 id="shadow">顔のセルフシャドーを調整する</h2>
+            <p><b>※この機能はまだ実験的な機能なのでご注意ください</b></p>
+            <p>セルフシャドーを改善するためにも顔の中心点が必要なので、先ほどの「CenterPos」の座標をそのまま使います。(例：Y=1.37, Z=-0.025、場合によっては中心位置を変えた方が良い可能性があるので、その場合は各々良い座標を見つけてください。</p>
+            <p>これを「Spherical Shadow Correct Origin」にセットします。</p>
+            <p>次に、影の位置とみなすためのCenterPosからの半径を設定します。雑に、「顔の中心から顔のちょっと前方までの距離」で大丈夫です。位置的には顔のちょっと前方なのでこの辺りになります。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162567326-82b2f50d-4b80-4a9f-a2e5-925b3f361130.png">
+            </figure>
+            <p>この場合、顔の中心から顔の前方までの距離は0.145だったのでこれを「Spherical Shadow Correct Radius」にセットします。</p>
+            <p>全て設定が終わった後の値はこんな感じになります。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162567473-a0091295-0452-40ce-99ef-fbad67e046a8.png">
+            </figure>
+            <p>Spherical Shadow Correctの値を1に近づけると影判定の座標が補正されるので、変なセルフシャドーが改善されます。</p>
+            <p>今回の場合は顔の前方が影判定の位置になるので、髪などのセルフシャドーが掛からなくなります。</p>
+            <p>CenterPosはもう必要ないので削除してください。</p>
+            <figure class="image">
+              <img src="https://user-images.githubusercontent.com/8346139/162567610-944d9cba-2488-4d16-b59e-3fe3aa9c2164.png">
+            </figure>
+            <p>この状態で、ライトの方向を変えたり物陰に移動したりして、変な影にならないかを確認してください。</p>
+
+            <h2 id="property">物理特性を調整する</h2>
+            <p>TODO</p>
+
+            <h2 id="tips">Tips</h2>
+            <p>TODO</p>
           </div>
   
         </div>
