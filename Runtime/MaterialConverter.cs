@@ -48,25 +48,75 @@ namespace UniToon
 
     public class MaterialConverter
     {
+        enum RenderPipelineType
+        {
+            Builtin = 0,
+            URP = 1,
+            HDRP = 2,
+        }
+
         public static UniToonVersion GetCurrentVersion()
         {
+            if (GraphicsSettings.currentRenderPipeline?.GetType().Name == "UniversalRenderPipelineAsset")
+            {
 #if UNITY_2021_2
-            return UniToonVersion.URP_2021_2;
+                return UniToonVersion.URP_2021_2;
 #elif UNITY_2021_1
-            return UniToonVersion.URP_2021_1;
+                return UniToonVersion.URP_2021_1;
 #elif UNITY_2020_3
-            return UniToonVersion.URP_2020_3;
+                return UniToonVersion.URP_2020_3;
 #elif UNITY_2020_2
-            return UniToonVersion.URP_2020_2;
+                return UniToonVersion.URP_2020_2;
 #elif UNITY_2020_1
-            return UniToonVersion.URP_2020_1;
+                return UniToonVersion.URP_2020_1;
 #elif UNITY_2019_4
-            return UniToonVersion.URP_2019_4;
+                return UniToonVersion.URP_2019_4;
 #elif UNITY_2019_3
-            return UniToonVersion.URP_2019_3;
+                return UniToonVersion.URP_2019_3;
 #else
-            return UniToonVersion.Unknown;
+                return UniToonVersion.Unknown;
 #endif
+            }
+            else if (GraphicsSettings.currentRenderPipeline?.GetType().Name == "HDRenderPipelineAsset")
+            {
+#if UNITY_2021_2
+                return UniToonVersion.Unknown;
+#elif UNITY_2021_1
+                return UniToonVersion.Unknown;
+#elif UNITY_2020_3
+                return UniToonVersion.Unknown;
+#elif UNITY_2020_2
+                return UniToonVersion.Unknown;
+#elif UNITY_2020_1
+                return UniToonVersion.Unknown;
+#elif UNITY_2019_4
+                return UniToonVersion.Unknown;
+#elif UNITY_2019_3
+                return UniToonVersion.Unknown;
+#else
+                return UniToonVersion.Unknown;
+#endif
+            }
+            else
+            {
+#if UNITY_2021_2
+                return UniToonVersion.Unknown;
+#elif UNITY_2021_1
+                return UniToonVersion.Unknown;
+#elif UNITY_2020_3
+                return UniToonVersion.Unknown;
+#elif UNITY_2020_2
+                return UniToonVersion.Unknown;
+#elif UNITY_2020_1
+                return UniToonVersion.Unknown;
+#elif UNITY_2019_4
+                return UniToonVersion.Unknown;
+#elif UNITY_2019_3
+                return UniToonVersion.Unknown;
+#else
+                return UniToonVersion.Unknown;
+#endif
+            }
         }
 
         private static Texture GetTexture(Material mat, string propertyName)
@@ -76,6 +126,8 @@ namespace UniToon
 
         public static void MaterialChanged(Material mat, UniToonVersion version, bool updateRenderQueue = false)
         {
+            var rp = (RenderPipelineType)((int)version / 1000);
+
             // clear keywords
             mat.shaderKeywords = new string[0];
 
@@ -85,19 +137,36 @@ namespace UniToon
             // workflow mode
             if ((WorkflowMode)mat.GetFloat("_WorkflowMode") == WorkflowMode.Specular)
             {
-                SetKeyword(mat, "_METALLICSPECGLOSSMAP", GetTexture(mat, "_SpecGlossMap"));
-                SetKeyword(mat, "_SPECULAR_SETUP", true);
+                if (rp == RenderPipelineType.Builtin)
+                {
+                    SetKeyword(mat, "_METALLICGLOSSMAP", GetTexture(mat, "_SpecGlossMap"));
+                }
+                else if (rp == RenderPipelineType.URP)
+                {
+                    SetKeyword(mat, "_METALLICSPECGLOSSMAP", GetTexture(mat, "_SpecGlossMap"));
+                    SetKeyword(mat, "_SPECULAR_SETUP", true);
+                }
             }
             else
             {
-                SetKeyword(mat, "_METALLICSPECGLOSSMAP", GetTexture(mat, "_MetallicGlossMap"));
+                if (rp == RenderPipelineType.Builtin)
+                {
+                    SetKeyword(mat, "_METALLICGLOSSMAP", GetTexture(mat, "_MetallicGlossMap"));
+                }
+                else if (rp == RenderPipelineType.URP)
+                {
+                    SetKeyword(mat, "_METALLICSPECGLOSSMAP", GetTexture(mat, "_MetallicGlossMap"));
+                }
             }
             
             // parallax map
             SetKeyword(mat, "_PARALLAXMAP", GetTexture(mat, "_ParallaxMap"));
 
             // occlusion map
-            SetKeyword(mat, "_OCCLUSIONMAP", GetTexture(mat, "_OcclusionMap"));
+            if (rp == RenderPipelineType.URP)
+            {
+                SetKeyword(mat, "_OCCLUSIONMAP", GetTexture(mat, "_OcclusionMap"));
+            }
 
             // detail map
             SetKeyword(mat, "_DETAIL_MULX2", GetTexture(mat, "_DetailAlbedoMap") || GetTexture(mat, "_DetailNormalMap"));
@@ -111,8 +180,21 @@ namespace UniToon
             // specular highlights
             SetKeyword(mat, "_SPECULARHIGHLIGHTS_OFF", mat.GetFloat("_SpecularHighlights") < 0.5f);
 
+            // environment reflections
+            if (rp == RenderPipelineType.Builtin)
+            {
+                SetKeyword(mat, "_GLOSSYREFLECTIONS_OFF", mat.GetFloat("_EnvironmentReflections") < 0.5f);
+            }
+            else if (rp == RenderPipelineType.URP)
+            {
+                SetKeyword(mat, "_ENVIRONMENTREFLECTIONS_OFF", mat.GetFloat("_EnvironmentReflections") < 0.5f);
+            }
+
             // receive shadow
-            SetKeyword(mat, "_RECEIVE_SHADOWS_OFF", mat.GetFloat("_ReceiveShadow") < 0.5f);
+            if (rp == RenderPipelineType.URP)
+            {
+                SetKeyword(mat, "_RECEIVE_SHADOWS_OFF", mat.GetFloat("_ReceiveShadow") < 0.5f);
+            }
 
             // blend mode
             SetBlendMode(mat, updateRenderQueue);

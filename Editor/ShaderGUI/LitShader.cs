@@ -12,6 +12,7 @@ namespace UniToon
         SavedBool fo_workflow;
         SavedBool fo_baseColor;
         SavedBool fo_shading;
+        SavedBool fo_normalCorrection;
         SavedBool fo_shadowCorrection;
         SavedBool fo_physicalProperty;
         SavedBool fo_surface;
@@ -20,12 +21,16 @@ namespace UniToon
         SavedBool fo_postprocessing;
         SavedBool fo_advanced;
 
+        private Transform normalCorrectOriginTrans;
+        private Transform shadowCorrectOriginTrans;
+
         void OnOpenGUI()
         {
             var prefix = "UniToonLitShaderGUI";
             fo_workflow = new SavedBool($"{prefix}.Workflow", true);
             fo_baseColor = new SavedBool($"{prefix}.BaseColor", true);
             fo_shading = new SavedBool($"{prefix}.Shading", true);
+            fo_normalCorrection = new SavedBool($"{prefix}.NormalCorrection", true);
             fo_shadowCorrection = new SavedBool($"{prefix}.ShadowCorrection", true);
             fo_physicalProperty = new SavedBool($"{prefix}.PhysicalProperty", true);
             fo_surface = new SavedBool($"{prefix}.Surface", true);
@@ -56,7 +61,7 @@ namespace UniToon
             EditorGUILayout.Space();
 
             // version
-            GUILayout.Label("UniToon ver 0.21.0-alpha");
+            GUILayout.Label("UniToon ver 0.21.1-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));
@@ -111,17 +116,28 @@ namespace UniToon
             if (BeginSection("Shading", fo_shading))
             {
                 changed |= MaterialGUI.Slider("Toony Factor", FindProperty("_ToonyFactor", properties), 0.001f, 1.0f);
-                changed |= MaterialGUI.Slider("Spherical Normal Correct", FindProperty("_NormalCorrect", properties), 0.0f, 1.0f);
-                changed |= MaterialGUI.Vector3("Spherical Normal Correct Origin", FindProperty("_NormalCorrectOrigin", properties));
+            }
+            changed |= EndSection();
+
+            if (BeginSection("Spherical Normal Correction (Experimental)", fo_normalCorrection))
+            {
+                changed |= MaterialGUI.Slider("Factor", FindProperty("_NormalCorrect", properties), 0.0f, 1.0f);
+                changed |= MaterialGUI.Vector3("Origin", FindProperty("_NormalCorrectOrigin", properties));
+                // normalCorrectOriginTrans = (Transform)EditorGUILayout.ObjectField("[Editor Only] Origin Transform", normalCorrectOriginTrans, typeof(Transform), true);
+                // if (normalCorrectOriginTrans != null && GUILayout.Button("Calc From Origin Transform"))
+                // {
+                //     FindProperty("_NormalCorrectOrigin", properties).vectorValue = normalCorrectOriginTrans.localPosition;
+                //     changed = true;
+                // }
             }
             changed |= EndSection();
 
             // shadow correction
-            if (BeginSection("Shadow Correction (Experimental)", fo_shadowCorrection))
+            if (BeginSection("Spherical Shadow Correction (Experimental)", fo_shadowCorrection))
             {
-                changed |= MaterialGUI.Slider("Spherical Shadow Correct", FindProperty("_ShadowCorrect", properties), 0.0f, 1.0f);
-                changed |= MaterialGUI.Vector3("Spherical Shadow Correct Origin", FindProperty("_ShadowCorrectOrigin", properties));
-                changed |= MaterialGUI.Slider("Spherical Shadow Correct Radius", FindProperty("_ShadowCorrectRadius", properties), 0.0f, 2.0f);
+                changed |= MaterialGUI.Slider("Factor", FindProperty("_ShadowCorrect", properties), 0.0f, 1.0f);
+                changed |= MaterialGUI.Vector3("Origin", FindProperty("_ShadowCorrectOrigin", properties));
+                changed |= MaterialGUI.Slider("Radius", FindProperty("_ShadowCorrectRadius", properties), 0.0f, 2.0f);
             }
             changed |= EndSection();
 

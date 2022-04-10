@@ -1,10 +1,10 @@
+#if UNITY_2021_2_OR_NEWER
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-#if UNITY_2021_2_OR_NEWER
 namespace UniToon
 {
     public class DeferredOutlineRendererFeature : ScriptableRendererFeature

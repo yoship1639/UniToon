@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.21.1] - 2022-04-10
+- Fixed environement reflections flag not working.
+
 ## [0.21.0] - 2022-04-09
 - Supports URP 2019.4.
 - Supports URP 2019.3.
