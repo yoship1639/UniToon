@@ -47,22 +47,15 @@ You can import packages from the path below
 
 ## Support Status
 
-Render Pipeline
-
-|  Builtin  |  URP      | HDRP      |
-| --------- | --------  | --------  |
-|  Not yet  |  Support  | Not yet   |
-
-Unity Version
-
-|  Version      | Support           |
-| ------------- | ------------      |
-|  Unity2019.x  | Not yet           |
-|  Unity2020.1  | Yes               |
-|  Unity2020.2  | Yes               |
-|  Unity2020.3  | Yes               |
-|  Unity2021.1  | Yes               |
-|  Unity2021.2  | Yes               |
+|  Version      | Builtin   | URP       | HDRP      |
+| ------------- | --------- | --------- | --------- |
+|  Unity2019.3  | Not yet   | Yes       | Not yet   |
+|  Unity2019.4  | Not yet   | Yes       | Not yet   |
+|  Unity2020.1  | Not yet   | Yes       | Not yet   |
+|  Unity2020.2  | Not yet   | Yes       | Not yet   |
+|  Unity2020.3  | Not yet   | Yes       | Not yet   |
+|  Unity2021.1  | Not yet   | Yes       | Not yet   |
+|  Unity2021.2  | Not yet   | Yes       | Not yet   |
 
 ## Gallery
 
