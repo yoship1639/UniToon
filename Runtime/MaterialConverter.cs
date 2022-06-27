@@ -8,6 +8,7 @@ namespace UniToon
     public enum UniToonVersion
     {
         Unknown = 0,
+        URP_2021_3 = 1213,
         URP_2021_2 = 1212,
         URP_2021_1 = 1211,
         URP_2020_3 = 1203,
@@ -59,7 +60,9 @@ namespace UniToon
         {
             if (GraphicsSettings.currentRenderPipeline?.GetType().Name == "UniversalRenderPipelineAsset")
             {
-#if UNITY_2021_2
+#if UNITY_2021_3
+                return UniToonVersion.URP_2021_3;
+#elif UNITY_2021_2
                 return UniToonVersion.URP_2021_2;
 #elif UNITY_2021_1
                 return UniToonVersion.URP_2021_1;

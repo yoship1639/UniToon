@@ -56,6 +56,7 @@ You can import packages from the path below
 |  Unity2020.3  | Not yet   | Yes       | Not yet   |
 |  Unity2021.1  | Not yet   | Yes       | Not yet   |
 |  Unity2021.2  | Not yet   | Yes       | Not yet   |
+|  Unity2021.3  | Not yet   | Yes       | Not yet   |
 
 ## Gallery
 

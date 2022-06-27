@@ -61,7 +61,7 @@ namespace UniToon
             EditorGUILayout.Space();
 
             // version
-            GUILayout.Label("UniToon ver 0.21.1-alpha");
+            GUILayout.Label("UniToon ver 0.22.0-alpha");
 
             EditorGUILayout.Space();
             changed = MaterialGUI.Enum<UniToonVersion>("Version", FindProperty("_UniToonVer", properties));

@@ -1,6 +1,6 @@
 {
   "name": "com.yoship1639.unitoon",
-  "version": "0.21.1",
+  "version": "0.22.0",
   "displayName": "UniToon",
   "description": "Physically-based Toon Shader for game applications. Compliant with Unity standard rendering functions. It is not targeted to be multifunctional in order to keep performance, but to be universally usable.",
   "unity": "2019.3",
